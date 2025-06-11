@@ -57,6 +57,7 @@ Spinner View
 Spinner View:
 - You shouldn't be able to add a combo in the default items (before first spin).
 - On initial load, don't show redirection text and redirection screen, just load the spinner view.
+- Combo counter icon should always be visible if combos exist.
 
 Lists View:
 - The bottom bar is at the wrong height on mobile devices and leaves some random space below it.

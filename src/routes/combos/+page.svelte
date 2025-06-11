@@ -343,7 +343,7 @@
 	/* --- FONT SETUP --- */
 	@font-face {
 		font-family: 'Merchant Copy';
-		src: url('./fonts/Merchant-Copy.ttf') format('TrueType');
+		src: url('/fonts/Merchant-Copy.ttf') format('TrueType');
 	}
 
 	main {
