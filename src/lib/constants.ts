@@ -1,0 +1,5 @@
+
+
+export const ROTATION_INTERVAL = 50;
+export const CLICK_PREVENTION_DELAY = 100;
+export const ROTATION_START_DELAY = 300;
