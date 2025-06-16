@@ -304,20 +304,21 @@
 <main>
 	<div class="header">
 		<div class="nav-items">
-			<button class="back-button" onclick={() => goto('/')}>←</button>
-			<h1>Lists</h1>
+			<button class="back-button" onclick={() => goto('/')}>← Back to Spinner</button>
 		</div>
 		<div class="header-buttons">
-			<button
-				class="reset-button"
-				onclick={(e) => {
-					e.stopPropagation();
-					toggleResetModal();
-				}}
-				title="Reset all lists"
-			>
-				🗑️
-			</button>
+			{#if isDesktop}
+				<button
+					class="reset-button"
+					onclick={(e) => {
+						e.stopPropagation();
+						toggleResetModal();
+					}}
+					title="Reset all lists"
+				>
+					🗑️
+				</button>
+			{/if}
 			<!-- <button
 				class="auth-button"
 				onclick={(e) => {
@@ -463,6 +464,15 @@
 					>
 						🥦
 					</button>
+					{#if !isDesktop}
+						<button
+							class="nav-button reset-nav-button"
+							onclick={toggleResetModal}
+							title="Reset all lists"
+						>
+							🗑️
+						</button>
+					{/if}
 				</div>
 			</div>
 		{/if}
@@ -633,20 +643,23 @@
 
 <style>
 	main {
-		min-height: 100vh;
+		height: 100vh;
 		background-color: #f5f5f5;
 		padding: 1rem;
 		font-family:
 			system-ui,
 			-apple-system,
 			sans-serif;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.header {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 2rem;
+		margin-bottom: 1rem;
 	}
 
 	.nav-items {
@@ -661,7 +674,17 @@
 		align-items: center;
 	}
 
-	.back-button,
+	.back-button {
+		font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+		font-weight: 500;
+		background: none;
+		border: none;
+		font-size: 0.9rem;
+		cursor: pointer;
+		padding: 0.5rem;
+		color: #555;
+	}
+
 	.auth-button {
 		background: none;
 		border: none;
@@ -680,21 +703,6 @@
 		color: #2196f3;
 	}
 
-	.reset-button {
-		background: none;
-		border: none;
-		font-size: 1.5rem;
-		cursor: pointer;
-		padding: 0.5rem;
-		opacity: 0.7;
-		transition: opacity 0.2s ease;
-	}
-
-	.reset-button:hover {
-		opacity: 1;
-		transform: scale(1.1);
-	}
-
 	h1 {
 		font-size: 1.5rem;
 		margin: 0;
@@ -702,6 +710,10 @@
 
 	.lists-container {
 		padding: 0 1rem;
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
 	}
 
 	/* Desktop layout */
@@ -715,7 +727,7 @@
 		flex: 1;
 		background-color: white;
 		border-radius: 5px;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+		box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
 		overflow: hidden;
 		display: flex;
 		flex-direction: column;
@@ -726,13 +738,14 @@
 	.list-single {
 		background-color: white;
 		border-radius: 5px;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+		box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
 		overflow: hidden;
 		display: flex;
 		flex-direction: column;
-		height: 80vh;
+		flex: 1;
 		max-width: 600px;
 		margin: 0 auto;
+		min-height: 0;
 	}
 
 	.list-header {
@@ -827,6 +840,7 @@
 		background-color: #f9f9f9;
 		border-radius: 2rem;
 		margin-top: 1rem;
+		flex-shrink: 0;
 	}
 
 	.nav-button {
@@ -857,6 +871,32 @@
 
 	.veggie.active {
 		color: green;
+	}
+
+	.reset-nav-button {
+		margin-left: 0.5rem;
+	}
+
+	.reset-nav-button:hover {
+		background: #ff6b6b !important;
+		color: white !important;
+		opacity: 1 !important;
+		transform: scale(1.05);
+	}
+
+	.reset-button {
+		background: none;
+		border: none;
+		font-size: 1.5rem;
+		cursor: pointer;
+		padding: 0.5rem;
+		opacity: 0.7;
+		transition: opacity 0.2s ease;
+	}
+
+	.reset-button:hover {
+		opacity: 1;
+		transform: scale(1.1);
 	}
 
 	/* Modal close button */
@@ -1041,10 +1081,20 @@
 	@media (max-width: 767px) {
 		main {
 			padding: 0.5rem;
+			padding-bottom: 0;
 		}
 
 		.lists-container {
 			padding: 0;
+		}
+
+		.list-single {
+			max-width: none;
+			margin: 0;
+		}
+
+		.mobile-nav {
+			margin-bottom: 0;
 		}
 
 		.form-actions {

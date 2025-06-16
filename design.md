@@ -40,6 +40,7 @@ List View
 - When the new item window is open, turn off keyboard and swipe shortcuts.
 - The list view needs to support adding, editing and deleting food items.
 - Don't have the background fade in. It should just immediately appear.
+- The bottom bar is at the wrong height on mobile devices and leaves some random space below it.
 
 Spinner View
 - Fix the auth window x button not working on the spinner view.
@@ -53,6 +54,9 @@ Spinner View
 - Decrease the duration of the fade in animation
 - Swipe gestures do not work on mobile (or anywhere else) (now use swipe-navigation lib)
 - The navigation buttons should appear after the first rotation and stay via flag in the local storage)
+- You shouldn't be able to add a combo in the default items (before first spin).
+- On initial load, don't show redirection text and redirection screen, just load the spinner view.
+- Combo counter icon should always be visible if combos exist.
 
 - Auth Screen should be disabled behind a feature flag (or disabled)
 - The user should be logged in and always able to edit lists.
@@ -60,12 +64,9 @@ Spinner View
 ### Todo (before internal release)
 
 Spinner View:
-- You shouldn't be able to add a combo in the default items (before first spin).
-- On initial load, don't show redirection text and redirection screen, just load the spinner view.
-- Combo counter icon should always be visible if combos exist.
+- Clicking the swipe to create combo message should also create a combo.
 
 Lists View:
-- The bottom bar is at the wrong height on mobile devices and leaves some random space below it.
 - Should be styled more like the combo (receipt view)
 
 
