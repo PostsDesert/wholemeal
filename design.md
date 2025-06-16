@@ -23,6 +23,11 @@
 		- Sign out + Delete Account (and Data) + Get Data
 
 ### Done
+Overall:
+- The layout should respect the iOS safe areas on PWA.
+
+
+
 Combo Page
 - The combo page should show the auth button in the top right
 - On small width devices, the text should look like it does on the large width devices. Right now it gets way too small and narrow.

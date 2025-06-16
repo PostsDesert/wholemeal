@@ -304,7 +304,7 @@
 <main>
 	<div class="header">
 		<div class="nav-items">
-			<button class="back-button" onclick={() => goto('/spinner')}>←</button>
+			<button class="back-button" onclick={() => goto('/')}>←</button>
 			<h1>Lists</h1>
 		</div>
 		<div class="header-buttons">

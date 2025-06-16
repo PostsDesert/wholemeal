@@ -200,6 +200,20 @@
 	}
 
 	// Reset navigation visibility state (for testing purposes)
+	function updateComboCountFromStorage() {
+		if (browser) {
+			const storedData = localStorage.getItem(MEAL_PLANNER_KEY) || '{}';
+			try {
+				const data = JSON.parse(storedData);
+				comboCount = data.combos?.length || 0;
+				showComboCount = comboCount > 0;
+				hasAddedCombos = comboCount > 0;
+			} catch (e) {
+				console.error('Error loading combo count from storage:', e);
+			}
+		}
+	}
+
 	function resetNavigationState() {
 		if (typeof window !== 'undefined') {
 			localStorage.removeItem('spinner-nav-visible');
@@ -221,7 +235,7 @@
 			window.addEventListener('resize', checkIfDesktop);
 
 			// Load auth state
-			const storedData = localStorage.getItem('mealPlanner') || '{}';
+			const storedData = localStorage.getItem(MEAL_PLANNER_KEY) || '{}';
 			try {
 				const data = JSON.parse(storedData);
 				// Set isAuthenticated which will trigger the $derived currentFoodItemsSource
@@ -298,6 +312,8 @@
 			const savedNavState = localStorage.getItem('spinner-nav-visible');
 			if (savedNavState === 'true') {
 				firstRotationComplete = true;
+				// Also update combo count when restoring navigation state
+				updateComboCountFromStorage();
 			}
 		}
 	});
@@ -314,17 +330,8 @@
 			}
 			comboMessageDismissed = false; // Reset message dismissal for new spin cycle
 
-			// Update the combo count when first rotation completes
-			if (browser) {
-				const storedData = localStorage.getItem('mealPlanner') || '{}';
-				try {
-					const data = JSON.parse(storedData);
-					comboCount = data.combos?.length || 0;
-					showComboCount = comboCount > 0;
-				} catch (e) {
-					console.error('Error loading combo count:', e);
-				}
-			}
+			// Update combo count when first rotation completes
+			updateComboCountFromStorage();
 		}
 	});
 
@@ -444,7 +451,7 @@
 		};
 
 		// Get existing combos or create empty array
-		const storedData = localStorage.getItem('mealPlanner') || '{}';
+		const storedData = localStorage.getItem(MEAL_PLANNER_KEY) || '{}';
 		try {
 			const data = JSON.parse(storedData);
 			if (!data.combos) data.combos = [];
@@ -463,7 +470,7 @@
 				data.combos.push(newCombo);
 
 				// Save back to local storage
-				localStorage.setItem('mealPlanner', JSON.stringify(data));
+				localStorage.setItem(MEAL_PLANNER_KEY, JSON.stringify(data));
 
 				// Set flag that combos exist
 				localStorage.setItem('comboAdded', 'true');
@@ -499,7 +506,7 @@
 		console.log('Auth modal data change event received');
 		// Refresh data or UI as needed
 		if (browser) {
-			const storedData = localStorage.getItem('mealPlanner') || '{}';
+			const storedData = localStorage.getItem(MEAL_PLANNER_KEY) || '{}';
 			try {
 				const data = JSON.parse(storedData);
 				const newAuthStatus = data.auth?.isLoggedIn || false;

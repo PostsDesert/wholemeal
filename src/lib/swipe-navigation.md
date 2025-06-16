@@ -4,7 +4,7 @@ This utility provides a reusable swipe navigation system for touch devices acros
 
 ## Features
 
-- **Horizontal swipe navigation** between pages (`/spinner`, `/lists`, `/combos`)
+- **Horizontal swipe navigation** between pages (`/` (spinner), `/lists`, `/combos`)
 - **Preserves vertical scrolling** - does not interfere with normal page scrolling
 - **Configurable swipe handlers** for custom behaviors
 - **Modal-aware** - automatically disables when modals are open
