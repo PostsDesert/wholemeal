@@ -663,14 +663,12 @@
 
 <style>
 	main {
-		height: 100vh;
 		background-color: #f5f5f5;
 		padding: 1rem;
 		font-family:
 			system-ui,
 			-apple-system,
 			sans-serif;
-		overflow: hidden;
 		display: flex;
 		flex-direction: column;
 	}
@@ -725,10 +723,8 @@
 
 	.lists-container {
 		padding: 0 1rem;
-		flex: 1;
 		display: flex;
 		flex-direction: column;
-		overflow: hidden;
 	}
 
 	/* Desktop layout */
@@ -743,10 +739,8 @@
 		background-color: white;
 		border-radius: 5px;
 		box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
-		overflow: hidden;
 		display: flex;
 		flex-direction: column;
-		max-height: 80vh;
 	}
 
 	/* Mobile layout */
@@ -754,13 +748,10 @@
 		background-color: white;
 		border-radius: 5px;
 		box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
-		overflow: hidden;
 		display: flex;
 		flex-direction: column;
-		flex: 1;
 		max-width: 600px;
 		margin: 0 auto;
-		min-height: 0;
 	}
 
 	.list-header {
@@ -798,9 +789,6 @@
 
 	.list-items {
 		padding: 0.5rem;
-		overflow-y: auto;
-		flex: 1;
-		scrollbar-width: none;
 		transition:
 			opacity 0.15s ease,
 			transform 0.15s ease;

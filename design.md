@@ -42,6 +42,8 @@ List View
 - Don't have the background fade in. It should just immediately appear.
 - The bottom bar is at the wrong height on mobile devices and leaves some random space below it.
 - The back gesture should be styled more like the combo (receipt view)
+- Since we don't have anything at the bottom of the page, the lists should now show their full height.
+
 
 Spinner View
 - Fix the auth window x button not working on the spinner view.
@@ -72,7 +74,6 @@ Lists View:
   - Trash icon should be similar to plus button styling (not in list)
   - The plus bottom goes off the page and also the list shifts depending on the title. Can we fix the width?
 - Both
-  - Since we don't have anything at the bottom of the page, the lists should now show their full height.
 
 - "back to spinner" button should be a component and also the same for both pages
 
