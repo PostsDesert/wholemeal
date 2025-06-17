@@ -326,7 +326,7 @@
 					}}
 					title="Reset all lists"
 				>
-					🗑️
+					🍽️
 				</button>
 			{/if}
 			<!-- <button
@@ -438,34 +438,33 @@
 							{/each}
 
 							<!-- Trash button -->
+						</div>
+
+						<div class="mobile-header-actions">
 							<button
-								class="nav-pill reset-pill"
-								onclick={toggleResetModal}
-								onkeydown={(e) => {
-									if (e.key === 'Enter' || e.key === ' ') {
-										e.preventDefault();
-										toggleResetModal();
-									}
+								class="reset-button mobile-reset-button"
+								onclick={(e) => {
+									e.stopPropagation();
+									toggleResetModal();
 								}}
 								title="Reset all lists"
 							>
-								<span class="nav-emoji">🗑️</span>
+								🍽️
 							</button>
+							{#if isAuthenticated}
+								<button
+									class="add-button header-add-button"
+									onclick={() => {
+										isAddingItem = true;
+										editingItemIndex = null;
+										newItemText = '';
+										newItemEmoji = '';
+									}}
+								>
+									+
+								</button>
+							{/if}
 						</div>
-
-						{#if isAuthenticated}
-							<button
-								class="add-button header-add-button"
-								onclick={() => {
-									isAddingItem = true;
-									editingItemIndex = null;
-									newItemText = '';
-									newItemEmoji = '';
-								}}
-							>
-								+
-							</button>
-						{/if}
 					</div>
 				</div>
 				<div class="list-items">
@@ -843,12 +842,15 @@
 		cursor: pointer;
 		padding: 0.25rem;
 		opacity: 0.7;
-		transition: opacity 0.2s ease;
+		transition:
+			opacity 0.2s ease,
+			transform 0.2s ease;
 	}
 
 	.edit-button:hover,
 	.delete-button:hover {
 		opacity: 1;
+		transform: scale(1.1);
 	}
 
 	/* Mobile navigation */
@@ -903,17 +905,17 @@
 		min-width: 3.5rem;
 	}
 
-	.nav-pill:not(.active):not(.reset-pill) {
+	.nav-pill:not(.active) {
 		border-radius: 0 2rem 2rem 0;
 		padding-left: 1.2rem;
 		padding-right: 1.5rem;
 	}
 
-	.nav-pill:not(.active):not(.reset-pill):nth-child(2) {
+	.nav-pill:not(.active):nth-child(2) {
 		z-index: 2;
 	}
 
-	.nav-pill:not(.active):not(.reset-pill):nth-child(3) {
+	.nav-pill:not(.active):nth-child(3) {
 		z-index: 1;
 	}
 
@@ -930,21 +932,6 @@
 		z-index: 4;
 		margin-right: -0.8rem;
 		border-radius: 2rem;
-	}
-
-	.nav-pill.reset-pill {
-		margin-left: 1rem;
-		margin-right: 0;
-		background-color: #ffe6e6;
-		z-index: 0;
-		border-radius: 2rem;
-	}
-
-	.nav-pill.reset-pill:hover {
-		background-color: #ff6b6b;
-		color: white;
-		opacity: 1;
-		transform: scale(1.05);
 	}
 
 	.nav-emoji {
@@ -1021,6 +1008,15 @@
 		cursor: pointer;
 		line-height: 1;
 		padding: 0;
+		opacity: 0.7;
+		transition:
+			opacity 0.2s ease,
+			transform 0.2s ease;
+	}
+
+	.add-button:hover {
+		opacity: 1;
+		transform: scale(1.1);
 	}
 
 	.header-add-button {
@@ -1205,7 +1201,7 @@
 			min-width: 3rem;
 		}
 
-		.nav-pill:not(.active):not(.reset-pill) {
+		.nav-pill:not(.active) {
 			padding-left: 1rem;
 			padding-right: 1.2rem;
 		}
@@ -1214,9 +1210,25 @@
 			margin-right: -0.6rem;
 		}
 
-		.nav-pill.reset-pill {
-			margin-left: 0.8rem;
-			margin-right: 0;
+		.mobile-header-actions {
+			display: flex;
+			gap: 0.5rem;
+			align-items: center;
+		}
+
+		.mobile-reset-button {
+			background: none;
+			border: none;
+			font-size: 1.5rem;
+			cursor: pointer;
+			padding: 0.5rem;
+			opacity: 0.7;
+			transition: opacity 0.2s ease;
+		}
+
+		.mobile-reset-button:hover {
+			opacity: 1;
+			transform: scale(1.1);
 		}
 
 		.nav-emoji {

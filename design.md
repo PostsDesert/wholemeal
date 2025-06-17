@@ -65,7 +65,7 @@ Spinner View
 ### Todo (before internal release)
 
 Spinner View:
-- Clicking the swipe to create combo message should also create a combo.
+- Clicking the swipe button should dismiss the message after adding the combo.
 
 Lists View:
 - Mobile
