@@ -98,9 +98,24 @@
 		}
 	}
 
-	// Switch current list (for mobile view)
+	// Switch current list (for mobile view) with smooth transition
 	function switchList(list: FoodGroupLabel) {
-		currentList = list;
+		if (list === currentList) return;
+
+		// Add a subtle fade effect by temporarily reducing opacity
+		const listItems = document.querySelector('.list-items') as HTMLElement;
+		if (listItems) {
+			listItems.style.opacity = '0.5';
+			listItems.style.transform = 'translateY(5px)';
+
+			setTimeout(() => {
+				currentList = list;
+				listItems.style.opacity = '1';
+				listItems.style.transform = 'translateY(0)';
+			}, 100);
+		} else {
+			currentList = list;
+		}
 	}
 
 	// Add new item to list
@@ -235,11 +250,6 @@
 				goto('/spinner');
 			}
 		}
-	}
-
-	// Toggle auth modal
-	function toggleAuthModal() {
-		showAuthModal = !showAuthModal;
 	}
 
 	function toggleResetModal() {
@@ -391,28 +401,72 @@
 				{/each}
 			</div>
 		{:else}
-			<!-- Mobile layout: single list with navigation -->
+			<!-- Mobile layout: single list with navigation in header -->
 			<div class="list-single">
-				<div class="list-header {currentList}">
-					<h2>
-						{currentList}
-						<span class="emoji-icon">
-							{currentList === 'protein' ? '🐔' : currentList === 'carb' ? '🍚' : '🥦'}
-						</span>
-					</h2>
-					{#if isAuthenticated}
-						<button
-							class="add-button"
-							onclick={() => {
-								isAddingItem = true;
-								editingItemIndex = null;
-								newItemText = '';
-								newItemEmoji = '';
-							}}
-						>
-							+
-						</button>
-					{/if}
+				<div class="mobile-header-nav">
+					<div class="mobile-header-content {currentList}">
+						<h2 class="list-title {currentList}">
+							{currentList}
+						</h2>
+
+						<div class="nav-pill-container">
+							<!-- Current list emoji (front and overlapping) -->
+							<button class="nav-pill active">
+								<span class="nav-emoji">
+									{currentList === 'protein' ? '🐔' : currentList === 'carb' ? '🍚' : '🥦'}
+								</span>
+							</button>
+
+							<!-- Other list emojis (to the right) -->
+							{#each ['protein', 'carb', 'veggie'] as listType}
+								{#if listType !== currentList}
+									<button
+										class="nav-pill"
+										onclick={() => switchList(listType as FoodGroupLabel)}
+										onkeydown={(e) => {
+											if (e.key === 'Enter' || e.key === ' ') {
+												e.preventDefault();
+												switchList(listType as FoodGroupLabel);
+											}
+										}}
+									>
+										<span class="nav-emoji">
+											{listType === 'protein' ? '🐔' : listType === 'carb' ? '🍚' : '🥦'}
+										</span>
+									</button>
+								{/if}
+							{/each}
+
+							<!-- Trash button -->
+							<button
+								class="nav-pill reset-pill"
+								onclick={toggleResetModal}
+								onkeydown={(e) => {
+									if (e.key === 'Enter' || e.key === ' ') {
+										e.preventDefault();
+										toggleResetModal();
+									}
+								}}
+								title="Reset all lists"
+							>
+								<span class="nav-emoji">🗑️</span>
+							</button>
+						</div>
+
+						{#if isAuthenticated}
+							<button
+								class="add-button header-add-button"
+								onclick={() => {
+									isAddingItem = true;
+									editingItemIndex = null;
+									newItemText = '';
+									newItemEmoji = '';
+								}}
+							>
+								+
+							</button>
+						{/if}
+					</div>
 				</div>
 				<div class="list-items">
 					{#each foodItems[currentList] as item, index}
@@ -440,39 +494,6 @@
 							{/if}
 						</div>
 					{/each}
-				</div>
-				<!-- Mobile navigation -->
-				<div class="mobile-nav">
-					<button
-						class="nav-button protein"
-						class:active={currentList === 'protein'}
-						onclick={() => switchList('protein')}
-					>
-						🐔
-					</button>
-					<button
-						class="nav-button carb"
-						class:active={currentList === 'carb'}
-						onclick={() => switchList('carb')}
-					>
-						🍚
-					</button>
-					<button
-						class="nav-button veggie"
-						class:active={currentList === 'veggie'}
-						onclick={() => switchList('veggie')}
-					>
-						🥦
-					</button>
-					{#if !isDesktop}
-						<button
-							class="nav-button reset-nav-button"
-							onclick={toggleResetModal}
-							title="Reset all lists"
-						>
-							🗑️
-						</button>
-					{/if}
 				</div>
 			</div>
 		{/if}
@@ -703,11 +724,6 @@
 		color: #2196f3;
 	}
 
-	h1 {
-		font-size: 1.5rem;
-		margin: 0;
-	}
-
 	.lists-container {
 		padding: 0 1rem;
 		flex: 1;
@@ -786,6 +802,9 @@
 		overflow-y: auto;
 		flex: 1;
 		scrollbar-width: none;
+		transition:
+			opacity 0.15s ease,
+			transform 0.15s ease;
 	}
 
 	.list-item {
@@ -833,55 +852,125 @@
 	}
 
 	/* Mobile navigation */
-	.mobile-nav {
-		display: flex;
-		justify-content: center;
-		padding: 1rem;
+	.mobile-header-nav {
 		background-color: #f9f9f9;
-		border-radius: 2rem;
-		margin-top: 1rem;
-		flex-shrink: 0;
+		border-radius: 1rem;
+		margin-bottom: 1rem;
+		overflow: hidden;
 	}
 
-	.nav-button {
-		background: none;
+	.mobile-header-content {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 1rem;
+	}
+
+	.mobile-header-content.protein {
+		border-left: 5px solid brown;
+	}
+
+	.mobile-header-content.carb {
+		border-left: 5px solid rgb(141, 90, 98);
+	}
+
+	.mobile-header-content.veggie {
+		border-left: 5px solid green;
+	}
+
+	.nav-pill-container {
+		display: flex;
+		align-items: center;
+		padding: 0.5rem;
+		background-color: #f9f9f9;
+		border-radius: 2rem;
+		position: relative;
+	}
+
+	.nav-pill {
+		background-color: #e0e0e0;
 		border: none;
 		font-size: 1.5rem;
 		cursor: pointer;
 		padding: 0.5rem 1.5rem;
 		border-radius: 2rem;
 		transition: all 0.2s ease;
-		opacity: 0.6;
+		opacity: 0.8;
+		position: relative;
+		z-index: 1;
+		margin-right: -0.8rem;
+		min-width: 3.5rem;
 	}
 
-	.nav-button.active {
+	.nav-pill:not(.active):not(.reset-pill) {
+		border-radius: 0 2rem 2rem 0;
+		padding-left: 1.2rem;
+		padding-right: 1.5rem;
+	}
+
+	.nav-pill:not(.active):not(.reset-pill):nth-child(2) {
+		z-index: 2;
+	}
+
+	.nav-pill:not(.active):not(.reset-pill):nth-child(3) {
+		z-index: 1;
+	}
+
+	.nav-pill:hover {
+		opacity: 1;
+		transform: scale(1.05);
+	}
+
+	.nav-pill.active {
 		background-color: #fff;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 		transform: scale(1.1);
 		opacity: 1;
+		z-index: 4;
+		margin-right: -0.8rem;
+		border-radius: 2rem;
 	}
 
-	.protein.active {
+	.nav-pill.reset-pill {
+		margin-left: 1rem;
+		margin-right: 0;
+		background-color: #ffe6e6;
+		z-index: 0;
+		border-radius: 2rem;
+	}
+
+	.nav-pill.reset-pill:hover {
+		background-color: #ff6b6b;
+		color: white;
+		opacity: 1;
+		transform: scale(1.05);
+	}
+
+	.nav-emoji {
+		font-size: 1.2rem;
+		display: block;
+	}
+
+	.list-title {
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: #333;
+		text-transform: capitalize;
+		margin: 0;
+		flex-shrink: 0;
+	}
+
+	.list-title.protein {
 		color: brown;
 	}
 
-	.carb.active {
+	.list-title.carb {
 		color: rgb(141, 90, 98);
 	}
 
-	.veggie.active {
+	.list-title.veggie {
 		color: green;
-	}
-
-	.reset-nav-button {
-		margin-left: 0.5rem;
-	}
-
-	.reset-nav-button:hover {
-		background: #ff6b6b !important;
-		color: white !important;
-		opacity: 1 !important;
-		transform: scale(1.05);
 	}
 
 	.reset-button {
@@ -932,6 +1021,13 @@
 		cursor: pointer;
 		line-height: 1;
 		padding: 0;
+	}
+
+	.header-add-button {
+		flex-shrink: 0;
+		width: 2.5rem;
+		height: 2.5rem;
+		font-size: 1.2rem;
 	}
 
 	/* Modal */
@@ -1093,8 +1189,48 @@
 			margin: 0;
 		}
 
-		.mobile-nav {
-			margin-bottom: 0;
+		.mobile-header-nav {
+			margin-bottom: 0.5rem;
+			gap: 0.5rem;
+		}
+
+		.nav-pill-container {
+			padding: 0.3rem;
+		}
+
+		.nav-pill {
+			padding: 0.4rem 1.2rem;
+			font-size: 1.2rem;
+			margin-right: -0.6rem;
+			min-width: 3rem;
+		}
+
+		.nav-pill:not(.active):not(.reset-pill) {
+			padding-left: 1rem;
+			padding-right: 1.2rem;
+		}
+
+		.nav-pill.active {
+			margin-right: -0.6rem;
+		}
+
+		.nav-pill.reset-pill {
+			margin-left: 0.8rem;
+			margin-right: 0;
+		}
+
+		.nav-emoji {
+			font-size: 1rem;
+		}
+
+		.list-title {
+			font-size: 1.3rem;
+		}
+
+		.header-add-button {
+			width: 2rem;
+			height: 2rem;
+			font-size: 1rem;
 		}
 
 		.form-actions {
