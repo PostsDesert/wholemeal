@@ -7,6 +7,7 @@
 	import type { FoodGroupLabel, FoodItem } from '$lib/types';
 	import AuthModal from '../../components/AuthModal.svelte';
 	import DeleteModal from '../../components/DeleteModal.svelte';
+	import BackButton from '../../components/BackButton.svelte';
 	import { SwipeNavigationHandler } from '$lib/swipe-navigation';
 
 	// Auth state
@@ -314,7 +315,7 @@
 <main>
 	<div class="header">
 		<div class="nav-items">
-			<button class="back-button" onclick={() => goto('/')}>← Back to Spinner</button>
+			<BackButton href="/" text="← Back to Home" />
 		</div>
 		<div class="header-buttons">
 			{#if isDesktop}
@@ -690,17 +691,6 @@
 		display: flex;
 		gap: 1rem;
 		align-items: center;
-	}
-
-	.back-button {
-		font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-		font-weight: 500;
-		background: none;
-		border: none;
-		font-size: 0.9rem;
-		cursor: pointer;
-		padding: 0.5rem;
-		color: #555;
 	}
 
 	.auth-button {

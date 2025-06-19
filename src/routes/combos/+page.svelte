@@ -11,6 +11,7 @@
 
 	// --- NEW: IMPORT THE CANVAS EMOJI COMPONENT ---
 	import ReceiptEmoji from '../../components/ReceiptEmoji.svelte';
+	import BackButton from '../../components/BackButton.svelte';
 
 	// Combo interface for saved meal combinations
 	interface Combo {
@@ -244,7 +245,7 @@
 
 <main>
 	<div class="page-header">
-		<button class="back-button" onclick={() => goto('/spinner')}>← Back to Spinner</button>
+		<BackButton href="/spinner" text="← Back to Spinner" />
 	</div>
 
 	<!-- Receipt styled list of combos -->
@@ -358,17 +359,6 @@
 		max-width: 380px;
 		margin: 0 auto 1rem auto;
 		text-align: left;
-	}
-
-	.back-button {
-		font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-		font-weight: 500;
-		background: none;
-		border: none;
-		font-size: 0.9rem;
-		cursor: pointer;
-		padding: 0.5rem;
-		color: #555;
 	}
 
 	.receipt-container {
