@@ -71,10 +71,6 @@ Spinner View:
 - Clicking the swipe button should dismiss the message after adding the combo.
 
 Lists View:
-- Mobile
-  - Trash icon should be similar to plus button styling (not in list)
-  - The plus bottom goes off the page and also the list shifts depending on the title. Can we fix the width?
-- Both
 
 
 ### Future Improvements

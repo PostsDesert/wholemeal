@@ -10,6 +10,7 @@
 	import BackButton from '../../components/BackButton.svelte';
 	import { SwipeNavigationHandler } from '$lib/swipe-navigation';
 	import ReceiptEmoji from '../../components/ReceiptEmoji.svelte';
+	import Receipt from '../../components/Receipt.svelte';
 
 	// Auth state
 	let isAuthenticated = $state(true);
@@ -45,6 +46,8 @@
 	function checkIfDesktop() {
 		if (browser) {
 			isDesktop = window.innerWidth >= DESKTOP_BREAKPOINT;
+			// Temporarily force desktop mode for testing
+			isDesktop = true;
 		}
 	}
 
@@ -315,7 +318,7 @@
 
 <main>
 	<div class="page-header">
-		<BackButton href="/" text="← Back to Home" />
+		<BackButton href="/" text="← Back to Spinner" />
 	</div>
 
 	<!-- Receipt styled lists -->
@@ -324,180 +327,106 @@
 			<!-- Desktop: 3 receipts side by side -->
 			<div class="receipts-grid">
 				{#each ['protein', 'carb', 'veggie'] as group}
-					<div class="receipt-container">
-						<div class="receipt">
-							<div class="receipt-header">
-								<h2>WHOLEMEAL</h2>
-								<p class="receipt-subtitle">
-									{group === 'protein' ? 'PROTEIN' : group === 'carb' ? 'CARBS' : 'VEGGIES'} LIST
-								</p>
-								<p class="date">{new Date().toLocaleDateString()}</p>
-							</div>
-							<div class="receipt-divider">**********************************</div>
-
-							{#if foodItems[group as FoodGroupLabel].length === 0}
-								<div class="empty-state" in:fade>
-									<p>NO ITEMS</p>
-									{#if isAuthenticated}
-										<p>ADD ITEMS BELOW</p>
-									{/if}
-								</div>
-							{:else}
-								<div class="receipt-items">
-									{#each foodItems[group as FoodGroupLabel] as item, index}
-										<div class="item-line" in:fade={{ duration: 300 }}>
-											<div class="item-emoji">
-												<ReceiptEmoji emoji={item.emoji} size={20} />
-											</div>
-											<span class="item-text">{item.text}</span>
-											{#if isAuthenticated}
-												<div class="item-actions">
-													<button
-														class="edit-button"
-														onclick={() => editItem(group as FoodGroupLabel, index)}
-														title="Edit item"
-													>
-														(e)
-													</button>
-													<button
-														class="delete-button"
-														onclick={() => deleteItem(group as FoodGroupLabel, index)}
-														title="Delete item"
-													>
-														(x)
-													</button>
-												</div>
-											{/if}
-										</div>
-									{/each}
-								</div>
-							{/if}
-
-							<div class="receipt-divider">**********************************</div>
-							<div class="receipt-footer">
+					<Receipt
+						subtitle="{group === 'protein'
+							? 'PROTEIN'
+							: group === 'carb'
+								? 'CARBS'
+								: 'VEGGIES'} LIST"
+						customDate={new Date().toLocaleDateString()}
+						footer={desktopFooterSnippet(group)}
+					>
+						{#if foodItems[group as FoodGroupLabel].length === 0}
+							<div class="empty-state" in:fade>
+								<p>NO ITEMS</p>
 								{#if isAuthenticated}
-									<button
-										class="action-button"
-										onclick={() => {
-											currentList = group as FoodGroupLabel;
-											isAddingItem = true;
-											editingItemIndex = null;
-											newItemText = '';
-											newItemEmoji = '';
-										}}
-									>
-										ADD ITEM
-									</button>
+									<p>ADD ITEMS BELOW</p>
 								{/if}
-								<button
-									class="action-button reset-button"
-									onclick={(e) => {
-										e.stopPropagation();
-										toggleResetModal();
-									}}
-									title="Reset all lists"
-								>
-									RESET ALL
-								</button>
 							</div>
-						</div>
-					</div>
+						{:else}
+							<div class="receipt-items">
+								{#each foodItems[group as FoodGroupLabel] as item, index}
+									<div class="item-line" in:fade={{ duration: 300 }}>
+										<div class="item-emoji">
+											<ReceiptEmoji emoji={item.emoji} size={20} />
+										</div>
+										<span class="item-text">{item.text}</span>
+										{#if isAuthenticated}
+											<div class="item-actions">
+												<button
+													class="edit-button"
+													onclick={() => editItem(group as FoodGroupLabel, index)}
+													title="Edit item"
+												>
+													(e)
+												</button>
+												<button
+													class="delete-button"
+													onclick={() => deleteItem(group as FoodGroupLabel, index)}
+													title="Delete item"
+												>
+													(x)
+												</button>
+											</div>
+										{/if}
+									</div>
+								{/each}
+							</div>
+						{/if}
+					</Receipt>
 				{/each}
 			</div>
 		{:else}
 			<!-- Mobile: single receipt with underlined navigation -->
-			<div class="receipt-container mobile">
-				<div class="receipt">
-					<div class="receipt-header">
-						<h2>WHOLEMEAL</h2>
-						<p class="receipt-subtitle">
-							{currentList === 'protein' ? 'PROTEIN' : currentList === 'carb' ? 'CARBS' : 'VEGGIES'}
-							LIST
-						</p>
-						<p class="date">{new Date().toLocaleDateString()}</p>
+			<Receipt
+				class="mobile"
+				subtitle="{currentList === 'protein'
+					? 'PROTEIN'
+					: currentList === 'carb'
+						? 'CARBS'
+						: 'VEGGIES'} LIST"
+				customDate={new Date().toLocaleDateString()}
+				betweenHeaderAndContent={mobileNavSnippet}
+				footer={mobileFooterSnippet}
+			>
+				{#if foodItems[currentList].length === 0}
+					<div class="empty-state" in:fade>
+						<p>NO ITEMS</p>
+						{#if isAuthenticated}
+							<p>ADD ITEMS BELOW</p>
+						{/if}
 					</div>
-
-					<!-- Mobile navigation with underlined text -->
-					<div class="mobile-nav">
-						{#each ['protein', 'carb', 'veggie'] as listType}
-							<button
-								class="nav-button"
-								class:active={currentList === listType}
-								onclick={() => switchList(listType as FoodGroupLabel)}
-							>
-								{listType === 'protein' ? 'PROTEIN' : listType === 'carb' ? 'CARBS' : 'VEGGIES'}
-							</button>
+				{:else}
+					<div class="receipt-items">
+						{#each foodItems[currentList] as item, index}
+							<div class="item-line" in:fade={{ duration: 300 }}>
+								<div class="item-emoji">
+									<ReceiptEmoji emoji={item.emoji} size={20} />
+								</div>
+								<span class="item-text">{item.text}</span>
+								{#if isAuthenticated}
+									<div class="item-actions">
+										<button
+											class="edit-button"
+											onclick={() => editItem(currentList, index)}
+											title="Edit item"
+										>
+											(e)
+										</button>
+										<button
+											class="delete-button"
+											onclick={() => deleteItem(currentList, index)}
+											title="Delete item"
+										>
+											(x)
+										</button>
+									</div>
+								{/if}
+							</div>
 						{/each}
 					</div>
-
-					<div class="receipt-divider">**********************************</div>
-
-					{#if foodItems[currentList].length === 0}
-						<div class="empty-state" in:fade>
-							<p>NO ITEMS</p>
-							{#if isAuthenticated}
-								<p>ADD ITEMS BELOW</p>
-							{/if}
-						</div>
-					{:else}
-						<div class="receipt-items">
-							{#each foodItems[currentList] as item, index}
-								<div class="item-line" in:fade={{ duration: 300 }}>
-									<div class="item-emoji">
-										<ReceiptEmoji emoji={item.emoji} size={20} />
-									</div>
-									<span class="item-text">{item.text}</span>
-									{#if isAuthenticated}
-										<div class="item-actions">
-											<button
-												class="edit-button"
-												onclick={() => editItem(currentList, index)}
-												title="Edit item"
-											>
-												(e)
-											</button>
-											<button
-												class="delete-button"
-												onclick={() => deleteItem(currentList, index)}
-												title="Delete item"
-											>
-												(x)
-											</button>
-										</div>
-									{/if}
-								</div>
-							{/each}
-						</div>
-					{/if}
-
-					<div class="receipt-divider">**********************************</div>
-					<div class="receipt-footer">
-						{#if isAuthenticated}
-							<button
-								class="action-button"
-								onclick={() => {
-									isAddingItem = true;
-									editingItemIndex = null;
-									newItemText = '';
-									newItemEmoji = '';
-								}}
-							>
-								ADD ITEM
-							</button>
-						{/if}
-						<button
-							class="action-button reset-button"
-							onclick={(e) => {
-								e.stopPropagation();
-								toggleResetModal();
-							}}
-							title="Reset all lists"
-						>
-							RESET ALL
-						</button>
-					</div>
-				</div>
-			</div>
+				{/if}
+			</Receipt>
 		{/if}
 	</div>
 
@@ -664,6 +593,74 @@
 	/>
 </main>
 
+{#snippet desktopFooterSnippet(group)}
+	{#if isAuthenticated}
+		<button
+			class="action-button"
+			onclick={() => {
+				currentList = group as FoodGroupLabel;
+				isAddingItem = true;
+				editingItemIndex = null;
+				newItemText = '';
+				newItemEmoji = '';
+			}}
+		>
+			ADD ITEM
+		</button>
+	{/if}
+	<button
+		class="action-button reset-button"
+		onclick={(e) => {
+			e.stopPropagation();
+			toggleResetModal();
+		}}
+		title="Reset all lists"
+	>
+		RESET ALL
+	</button>
+{/snippet}
+
+{#snippet mobileNavSnippet()}
+	<!-- Mobile navigation with underlined text -->
+	<div class="mobile-nav">
+		{#each ['protein', 'carb', 'veggie'] as listType}
+			<button
+				class="nav-button"
+				class:active={currentList === listType}
+				onclick={() => switchList(listType as FoodGroupLabel)}
+			>
+				{listType === 'protein' ? 'PROTEIN' : listType === 'carb' ? 'CARBS' : 'VEGGIES'}
+			</button>
+		{/each}
+	</div>
+{/snippet}
+
+{#snippet mobileFooterSnippet()}
+	{#if isAuthenticated}
+		<button
+			class="action-button"
+			onclick={() => {
+				isAddingItem = true;
+				editingItemIndex = null;
+				newItemText = '';
+				newItemEmoji = '';
+			}}
+		>
+			ADD ITEM
+		</button>
+	{/if}
+	<button
+		class="action-button reset-button"
+		onclick={(e) => {
+			e.stopPropagation();
+			toggleResetModal();
+		}}
+		title="Reset all lists"
+	>
+		RESET ALL
+	</button>
+{/snippet}
+
 <style>
 	/* --- FONT SETUP --- */
 	@font-face {
@@ -695,68 +692,6 @@
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		gap: 2rem;
-	}
-
-	.receipt-container {
-		background: #fdfdfd;
-		padding: 1.5rem;
-		box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
-		position: relative;
-	}
-
-	.receipt-container::after {
-		content: '';
-		position: absolute;
-		bottom: -15px;
-		left: 0;
-		right: 0;
-		height: 30px;
-		background:
-			linear-gradient(135deg, transparent 75%, #e0e0e0 75%) 0 50%,
-			linear-gradient(45deg, transparent 75%, #e0e0e0 75%) 0 50%;
-		background-size: 30px 30px;
-		background-repeat: repeat-x;
-	}
-
-	/* Mobile: single receipt */
-	.receipt-container.mobile {
-		max-width: 380px;
-		margin: 0 auto;
-	}
-
-	.receipt-header {
-		text-align: center;
-		margin-bottom: 1rem;
-	}
-
-	.receipt-header h2 {
-		font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-		font-weight: bold;
-		text-transform: uppercase;
-		font-size: 1.5rem;
-		margin: 0;
-		letter-spacing: 0.05em;
-	}
-
-	.receipt-subtitle {
-		margin: 0.25rem 0;
-		font-size: 0.9rem;
-		font-weight: bold;
-	}
-
-	.date {
-		margin: 0.25rem 0;
-		font-size: 0.8rem;
-		color: #666;
-	}
-
-	.receipt-divider {
-		font-size: 1rem;
-		text-align: center;
-		overflow: hidden;
-		white-space: nowrap;
-		margin: 1rem 0;
-		color: #555;
 	}
 
 	/* Mobile navigation with underlined text */
@@ -828,17 +763,36 @@
 		flex: 1;
 	}
 
+	.receipt-items {
+		padding: 0;
+	}
+
+	.item-line {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		margin-bottom: 0.5rem;
+		line-height: 1.2;
+		font-size: 1.25rem;
+	}
+
+	.item-text {
+		text-transform: uppercase;
+		flex: 1;
+	}
+
 	.item-emoji {
 		padding-right: 0.5rem;
-		order: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		line-height: 1;
 	}
 
 	.item-actions {
+		margin-left: auto;
 		display: flex;
 		gap: 0.25rem;
-		order: 2;
-		margin-left: auto;
 	}
 
 	.edit-button,
@@ -849,8 +803,7 @@
 		color: #999;
 		cursor: pointer;
 		padding: 0 0.25rem;
-		font-size: 0.9rem;
-		transition: color 0.2s ease;
+		font-size: 1rem;
 	}
 
 	.edit-button:hover {
@@ -861,41 +814,12 @@
 		color: #d32f2f;
 	}
 
-	.receipt-footer {
+	.empty-state {
 		text-align: center;
-		margin-top: 1rem;
-	}
-
-	.action-button {
-		font-family: inherit;
-		background-color: transparent;
-		border: 2px solid #333;
-		padding: 0.75rem 1rem;
-		cursor: pointer;
-		font-weight: bold;
+		padding: 2rem 0;
+		color: #666;
+		font-size: 0.9rem;
 		text-transform: uppercase;
-		transition: all 0.2s ease;
-		font-size: 0.8rem;
-		letter-spacing: 0.05em;
-		margin: 0.25rem;
-		display: block;
-		width: calc(100% - 0.5rem);
-	}
-
-	.action-button:hover {
-		background-color: #333;
-		color: #fdfdfd;
-	}
-
-	.reset-button {
-		border-color: #999;
-		color: #777;
-	}
-
-	.reset-button:hover {
-		background-color: #d32f2f;
-		border-color: #d32f2f;
-		color: white;
 	}
 
 	/* Modal styles - Receipt themed */
@@ -1143,18 +1067,6 @@
 			gap: 1rem;
 		}
 
-		.receipt-header h2 {
-			font-size: 2rem;
-		}
-
-		.receipt-header p {
-			font-size: 1.1rem;
-		}
-
-		.receipt-divider {
-			font-size: 1.25rem;
-		}
-
 		.item-line {
 			font-size: 1.25rem;
 		}
@@ -1179,28 +1091,35 @@
 		}
 	}
 
-	/* Desktop adjustments */
-	@media (min-width: 768px) {
-		.receipt-header h2 {
-			font-size: 1.5rem;
+	/* Mobile styles */
+	@media (max-width: 767px) {
+		main {
+			padding: 0.5rem;
 		}
 
-		.receipt-header p {
-			font-size: 0.9rem;
-		}
-
-		.receipt-divider {
-			font-size: 1rem;
+		.receipts-grid {
+			grid-template-columns: 1fr;
+			gap: 1rem;
 		}
 
 		.item-line {
-			font-size: 1rem;
+			font-size: 1.25rem;
 		}
 
-		.action-button {
-			display: inline-block;
-			width: auto;
-			margin: 0.25rem 0.125rem;
+		.mobile-nav {
+			margin-bottom: 1rem;
+		}
+
+		.nav-button {
+			font-size: 0.9rem;
+			padding: 0.5rem 1rem;
+		}
+	}
+
+	/* Desktop adjustments */
+	@media (min-width: 768px) {
+		.item-line {
+			font-size: 1rem;
 		}
 	}
 </style>

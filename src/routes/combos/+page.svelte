@@ -12,6 +12,7 @@
 	// --- NEW: IMPORT THE CANVAS EMOJI COMPONENT ---
 	import ReceiptEmoji from '../../components/ReceiptEmoji.svelte';
 	import BackButton from '../../components/BackButton.svelte';
+	import Receipt from '../../components/Receipt.svelte';
 
 	// Combo interface for saved meal combinations
 	interface Combo {
@@ -250,14 +251,7 @@
 
 	<!-- Receipt styled list of combos -->
 	<div class="receipt-container">
-		<div class="receipt">
-			<div class="receipt-header">
-				<h2>WHOLEMEAL</h2>
-				<p>Your Saved Combinations</p>
-				<p class="date">{new Date().toLocaleString()}</p>
-			</div>
-			<div class="receipt-divider">**********************************</div>
-
+		<Receipt subtitle="Your Saved Combinations" footer={footerSnippet}>
 			{#if combos.length === 0}
 				<div class="empty-state" in:fade>
 					<p>NO SAVED MEALS</p>
@@ -301,32 +295,31 @@
 					{/each}
 				</div>
 			{/if}
-
-			<div class="receipt-divider">**********************************</div>
-			<div class="receipt-footer">
-				<div class="action-buttons">
-					<button class="action-button" onclick={copyToClipboard}>
-						COPY LIST
-						{#if copySuccess}
-							<span class="success-message">✓</span>
-						{/if}
-					</button>
-					<button class="action-button" onclick={sendEmail}>
-						SEND VIA EMAIL
-						{#if emailSuccess}
-							<span class="success-message">✓</span>
-						{/if}
-					</button>
-					{#if combos.length > 0}
-						<button class="action-button clear-button" onclick={showClearConfirmation}>
-							CLEAR ALL MEALS
-						</button>
-					{/if}
-				</div>
-				<p class="receipt-note">Thank you for using WHOLEMEAL!</p>
-			</div>
-		</div>
+		</Receipt>
 	</div>
+
+	{#snippet footerSnippet()}
+		<div class="action-buttons">
+			<button class="action-button" onclick={copyToClipboard}>
+				COPY LIST
+				{#if copySuccess}
+					<span class="success-message">✓</span>
+				{/if}
+			</button>
+			<button class="action-button" onclick={sendEmail}>
+				SEND VIA EMAIL
+				{#if emailSuccess}
+					<span class="success-message">✓</span>
+				{/if}
+			</button>
+			{#if combos.length > 0}
+				<button class="action-button clear-button" onclick={showClearConfirmation}>
+					CLEAR ALL MEALS
+				</button>
+			{/if}
+		</div>
+		<p class="receipt-note">Thank you for using WHOLEMEAL!</p>
+	{/snippet}
 </main>
 
 <!-- Delete confirmation modal -->
@@ -361,61 +354,34 @@
 		text-align: left;
 	}
 
+	/* Receipt container wrapper for centering */
 	.receipt-container {
 		max-width: 380px;
 		margin: 0 auto;
-		background: #fdfdfd;
-		padding: 1.5rem;
-		box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
-		position: relative;
 	}
 
-	.receipt-container::after {
-		content: '';
-		position: absolute;
-		bottom: -15px;
-		left: 0;
-		right: 0;
-		height: 30px;
-		background:
-			linear-gradient(135deg, transparent 75%, #e0e0e0 75%) 0 50%,
-			linear-gradient(45deg, transparent 75%, #e0e0e0 75%) 0 50%;
-		background-size: 30px 30px;
-		background-repeat: repeat-x;
-	}
-
-	.receipt-header {
-		text-align: center;
-		margin-bottom: 1rem;
-	}
-
-	.receipt-header h2 {
-		font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-		font-weight: bold;
-		text-transform: uppercase;
-		font-size: 2rem;
-		/* Mobile: 32px (larger than desktop 30px) */
-		margin: 0;
-		letter-spacing: 0.05em;
-	}
-
-	.receipt-header p {
-		margin: 0.25rem 0;
-		font-size: 1.1rem;
-		/* Mobile: 22px (larger than desktop 18px) */
-	}
-
-	.receipt-divider {
+	.receipt-divider.small {
 		font-size: 1.25rem;
-		/* Mobile: 25px (larger than desktop 20px) */
 		text-align: center;
 		overflow: hidden;
 		white-space: nowrap;
-		margin: 1rem 0;
+		margin: 0.75rem 0;
 		color: #555;
 	}
-	.receipt-divider.small {
-		margin: 0.75rem 0;
+
+	/* Mobile styles */
+	@media (max-width: 767px) {
+		main {
+			padding: 0.5rem;
+		}
+
+		.item-line {
+			font-size: 1.25rem;
+		}
+
+		.receipt-divider.small {
+			font-size: 1.25rem;
+		}
 	}
 
 	.empty-state {
@@ -477,85 +443,46 @@
 		line-height: 1; /* Helps with vertical alignment */
 	}
 
-	.receipt-footer {
-		text-align: center;
-	}
-
-	.action-buttons {
-		display: flex;
-		flex-direction: column;
-		gap: 0.75rem;
-		margin-bottom: 1.5rem;
-	}
-
-	.action-button {
+	.delete-button {
+		background: none;
+		border: none;
 		font-family: inherit;
-		background-color: transparent;
-		border: 2px solid #333;
-		padding: 0.75rem 1rem;
+		color: #999;
 		cursor: pointer;
-		font-weight: bold;
-		text-transform: uppercase;
-		transition: all 0.2s ease;
-		position: relative;
-		font-size: 0.9rem;
-		letter-spacing: 0.05em;
+		padding: 0 0.25rem;
+		font-size: 1.25rem;
 	}
 
-	.action-button:hover {
-		background-color: #333;
-		color: #fdfdfd;
+	.delete-button:hover {
+		color: #d32f2f;
 	}
 
-	.clear-button {
-		border-color: #999;
-		color: #777;
-	}
-	.clear-button:hover {
-		background-color: #d32f2f;
-		border-color: #d32f2f;
-		color: white;
-	}
-
-	.success-message {
-		position: absolute;
-		right: 10px;
-		top: 50%;
-		transform: translateY(-50%);
-		color: #4caf50;
-		font-size: 1.5rem;
-		animation: pop-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+	.receipt-divider.small {
+		font-size: 1.25rem;
+		text-align: center;
+		overflow: hidden;
+		white-space: nowrap;
+		margin: 0.75rem 0;
+		color: #555;
 	}
 
-	@keyframes pop-in {
-		0% {
-			transform: scale(0) translateY(-50%);
+	/* Mobile styles */
+	@media (max-width: 767px) {
+		main {
+			padding: 0.5rem;
 		}
-		100% {
-			transform: scale(1) translateY(-50%);
-		}
-	}
 
-	.receipt-note {
-		font-size: 0.8rem;
-		color: #888;
-		margin: 0.5rem 0;
+		.item-line {
+			font-size: 1.25rem;
+		}
+
+		.receipt-divider.small {
+			font-size: 1.25rem;
+		}
 	}
 
 	/* Desktop styles - apply original sizes for larger screens */
 	@media (min-width: 768px) {
-		.receipt-header h2 {
-			font-size: 1.5rem; /* Desktop: 30px */
-		}
-
-		.receipt-header p {
-			font-size: 0.9rem; /* Desktop: 18px */
-		}
-
-		.receipt-divider {
-			font-size: 1rem; /* Desktop: 20px */
-		}
-
 		.combo-header {
 			font-size: 0.8rem; /* Desktop: 16px */
 		}
@@ -566,6 +493,10 @@
 
 		.item-line {
 			font-size: 1rem; /* Desktop: 20px */
+		}
+
+		.receipt-divider.small {
+			font-size: 1rem;
 		}
 	}
 </style>
