@@ -69,12 +69,21 @@ Spinner View
 
 Spinner View:
 - Clicking the swipe button should dismiss the message after adding the combo.
+- Add simple animation when adding to cart
+    - I'm thinking that the text disappears, the emojis all move the center and a cart emoji fades in over the top as the emojis shrink. Then the cart fades out. This should be ~1 second.
 
 Lists View:
-- Mobile
-  - Trash icon should be similar to plus button styling (not in list)
-  - The plus bottom goes off the page and also the list shifts depending on the title. Can we fix the width?
-- Both
+- On mobile, the back button should match the style and positioning of the combo page.
+
+Combo View:
+- The green checkbox after copying to clipboard is not applied with receipt filter.
+
+
+- Refactor out receipt component
+    - Font should be bigger on mobile devices
+
+- Refactor out button component (option for color)
+
 
 
 ### Future Improvements
