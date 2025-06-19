@@ -58,6 +58,12 @@
 {/if}
 
 <style>
+	/* --- FONT SETUP --- */
+	@font-face {
+		font-family: 'Merchant Copy';
+		src: url('/fonts/Merchant-Copy.ttf') format('TrueType');
+	}
+
 	.modal-overlay {
 		position: fixed;
 		top: 0;
@@ -73,89 +79,133 @@
 		z-index: 9999;
 		padding: 1rem;
 		box-sizing: border-box;
+		backdrop-filter: blur(2px);
 	}
 
 	.modal {
-		background: white;
-		border-radius: 8px;
+		background: #fdfdfd;
+		border-radius: 0;
 		padding: 2rem;
 		position: relative;
-		max-width: 90vw;
-		max-height: 90vh;
-		overflow-y: auto;
+		max-width: 400px;
+		width: 100%;
+		box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
+		font-family: 'Merchant Copy', 'Courier New', Courier, monospace;
+	}
+
+	.modal::after {
+		content: '';
+		position: absolute;
+		bottom: -15px;
+		left: 0;
+		right: 0;
+		height: 30px;
+		background:
+			linear-gradient(135deg, transparent 75%, #e0e0e0 75%) 0 50%,
+			linear-gradient(45deg, transparent 75%, #e0e0e0 75%) 0 50%;
+		background-size: 30px 30px;
+		background-repeat: repeat-x;
 	}
 
 	.modal-close-button {
 		position: absolute;
-		top: 0.5rem;
-		right: 0.5rem;
+		top: 1rem;
+		right: 1rem;
 		background: none;
 		border: none;
-		font-size: 1.5rem;
+		font-size: 1.2rem;
 		cursor: pointer;
 		padding: 0.5rem;
-		color: #666;
+		font-family: inherit;
+		color: #999;
 		transition: color 0.2s ease;
 	}
 
 	.modal-close-button:hover {
-		color: #333;
+		color: #d32f2f;
 	}
 
 	.delete-modal {
-		max-width: 400px;
+		text-align: center;
+	}
+
+	.delete-modal::before {
+		content: '**********************************';
+		display: block;
+		text-align: center;
+		color: #555;
+		margin-bottom: 1rem;
+		font-size: 1rem;
 	}
 
 	.delete-modal h3 {
-		color: #ff4444;
+		color: #d32f2f;
 		margin-bottom: 1rem;
 		margin-top: 0;
+		font-size: 1.2rem;
+		text-transform: uppercase;
+		text-align: center;
+		font-weight: bold;
+		letter-spacing: 0.05em;
 	}
 
 	.delete-modal p {
-		margin: 1rem 0;
+		margin: 1rem 0 2rem 0;
 		color: #666;
 		line-height: 1.5;
+		text-transform: none;
+		font-size: 1rem;
 	}
 
 	.delete-modal strong {
 		color: #333;
+		text-transform: uppercase;
 	}
 
 	.form-actions {
 		display: flex;
 		gap: 1rem;
-		justify-content: flex-end;
+		justify-content: center;
 		margin-top: 2rem;
+		padding-top: 1rem;
+		border-top: 2px dashed #333;
 	}
 
 	.cancel-button,
 	.delete-button {
 		padding: 0.75rem 1.5rem;
-		border-radius: 5px;
+		border: 2px solid #333;
+		border-radius: 0;
 		cursor: pointer;
+		font-size: 0.9rem;
+		font-family: inherit;
 		font-weight: bold;
-		transition: background-color 0.2s ease;
-		border: none;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		transition: all 0.2s ease;
+		background-color: transparent;
+		color: #333;
 	}
 
 	.cancel-button {
-		background-color: #f0f0f0;
+		border-color: #999;
+		color: #777;
 	}
 
 	.delete-button {
-		background-color: #ff4444;
-		color: white;
-		opacity: 0.7;
+		background-color: transparent;
+		color: #d32f2f;
+		border-color: #d32f2f;
 	}
 
 	.cancel-button:hover {
-		background-color: #e0e0e0;
+		background-color: #999;
+		color: #fdfdfd;
 	}
 
 	.delete-button:hover {
-		background-color: #cc0000;
-		opacity: 1;
+		background-color: #d32f2f;
+		color: #fdfdfd;
 	}
 
 	@media (max-width: 767px) {

@@ -63,6 +63,7 @@ Spinner View
 
 - Auth Screen should be disabled behind a feature flag (or disabled)
 - The user should be logged in and always able to edit lists.
+- "back to spinner" button should be a component and also the same for both pages
 
 ### Todo (before internal release)
 
@@ -74,8 +75,6 @@ Lists View:
   - Trash icon should be similar to plus button styling (not in list)
   - The plus bottom goes off the page and also the list shifts depending on the title. Can we fix the width?
 - Both
-
-- "back to spinner" button should be a component and also the same for both pages
 
 
 ### Future Improvements

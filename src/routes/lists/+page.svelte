@@ -9,6 +9,7 @@
 	import DeleteModal from '../../components/DeleteModal.svelte';
 	import BackButton from '../../components/BackButton.svelte';
 	import { SwipeNavigationHandler } from '$lib/swipe-navigation';
+	import ReceiptEmoji from '../../components/ReceiptEmoji.svelte';
 
 	// Auth state
 	let isAuthenticated = $state(true);
@@ -313,187 +314,188 @@
 </svelte:head>
 
 <main>
-	<div class="header">
-		<div class="nav-items">
-			<BackButton href="/" text="← Back to Home" />
-		</div>
-		<div class="header-buttons">
-			{#if isDesktop}
-				<button
-					class="reset-button"
-					onclick={(e) => {
-						e.stopPropagation();
-						toggleResetModal();
-					}}
-					title="Reset all lists"
-				>
-					🍽️
-				</button>
-			{/if}
-			<!-- <button
-				class="auth-button"
-				onclick={(e) => {
-					e.stopPropagation();
-					toggleAuthModal();
-				}}
-				class:authenticated={isAuthenticated}
-			>
-				👤
-			</button> -->
-		</div>
+	<div class="page-header">
+		<BackButton href="/" text="← Back to Home" />
 	</div>
 
-	<div class="lists-container" class:desktop={isDesktop}>
+	<!-- Receipt styled lists -->
+	<div class="receipts-container">
 		{#if isDesktop}
-			<!-- Desktop layout: side-by-side columns -->
-			<div class="list-columns">
+			<!-- Desktop: 3 receipts side by side -->
+			<div class="receipts-grid">
 				{#each ['protein', 'carb', 'veggie'] as group}
-					<div class="list-column">
-						<div class="list-header {group}">
-							<h2>
-								{group}
-								<span class="emoji-icon"
-									>{group === 'protein' ? '🐔' : group === 'carb' ? '🍚' : '🥦'}</span
-								>
-							</h2>
-							{#if isAuthenticated}
+					<div class="receipt-container">
+						<div class="receipt">
+							<div class="receipt-header">
+								<h2>WHOLEMEAL</h2>
+								<p class="receipt-subtitle">
+									{group === 'protein' ? 'PROTEIN' : group === 'carb' ? 'CARBS' : 'VEGGIES'} LIST
+								</p>
+								<p class="date">{new Date().toLocaleDateString()}</p>
+							</div>
+							<div class="receipt-divider">**********************************</div>
+
+							{#if foodItems[group as FoodGroupLabel].length === 0}
+								<div class="empty-state" in:fade>
+									<p>NO ITEMS</p>
+									{#if isAuthenticated}
+										<p>ADD ITEMS BELOW</p>
+									{/if}
+								</div>
+							{:else}
+								<div class="receipt-items">
+									{#each foodItems[group as FoodGroupLabel] as item, index}
+										<div class="item-line" in:fade={{ duration: 300 }}>
+											<div class="item-emoji">
+												<ReceiptEmoji emoji={item.emoji} size={20} />
+											</div>
+											<span class="item-text">{item.text}</span>
+											{#if isAuthenticated}
+												<div class="item-actions">
+													<button
+														class="edit-button"
+														onclick={() => editItem(group as FoodGroupLabel, index)}
+														title="Edit item"
+													>
+														(e)
+													</button>
+													<button
+														class="delete-button"
+														onclick={() => deleteItem(group as FoodGroupLabel, index)}
+														title="Delete item"
+													>
+														(x)
+													</button>
+												</div>
+											{/if}
+										</div>
+									{/each}
+								</div>
+							{/if}
+
+							<div class="receipt-divider">**********************************</div>
+							<div class="receipt-footer">
+								{#if isAuthenticated}
+									<button
+										class="action-button"
+										onclick={() => {
+											currentList = group as FoodGroupLabel;
+											isAddingItem = true;
+											editingItemIndex = null;
+											newItemText = '';
+											newItemEmoji = '';
+										}}
+									>
+										ADD ITEM
+									</button>
+								{/if}
 								<button
-									class="add-button"
-									onclick={() => {
-										currentList = group as FoodGroupLabel;
-										isAddingItem = true;
-										editingItemIndex = null;
-										newItemText = '';
-										newItemEmoji = '';
+									class="action-button reset-button"
+									onclick={(e) => {
+										e.stopPropagation();
+										toggleResetModal();
 									}}
+									title="Reset all lists"
 								>
-									+
+									RESET ALL
 								</button>
+							</div>
+						</div>
+					</div>
+				{/each}
+			</div>
+		{:else}
+			<!-- Mobile: single receipt with underlined navigation -->
+			<div class="receipt-container mobile">
+				<div class="receipt">
+					<div class="receipt-header">
+						<h2>WHOLEMEAL</h2>
+						<p class="receipt-subtitle">
+							{currentList === 'protein' ? 'PROTEIN' : currentList === 'carb' ? 'CARBS' : 'VEGGIES'}
+							LIST
+						</p>
+						<p class="date">{new Date().toLocaleDateString()}</p>
+					</div>
+
+					<!-- Mobile navigation with underlined text -->
+					<div class="mobile-nav">
+						{#each ['protein', 'carb', 'veggie'] as listType}
+							<button
+								class="nav-button"
+								class:active={currentList === listType}
+								onclick={() => switchList(listType as FoodGroupLabel)}
+							>
+								{listType === 'protein' ? 'PROTEIN' : listType === 'carb' ? 'CARBS' : 'VEGGIES'}
+							</button>
+						{/each}
+					</div>
+
+					<div class="receipt-divider">**********************************</div>
+
+					{#if foodItems[currentList].length === 0}
+						<div class="empty-state" in:fade>
+							<p>NO ITEMS</p>
+							{#if isAuthenticated}
+								<p>ADD ITEMS BELOW</p>
 							{/if}
 						</div>
-						<div class="list-items">
-							{#each foodItems[group as FoodGroupLabel] as item, index}
-								<div class="list-item" id={`item-${group}-${index}`}>
-									<span class="item-emoji">{item.emoji}</span>
+					{:else}
+						<div class="receipt-items">
+							{#each foodItems[currentList] as item, index}
+								<div class="item-line" in:fade={{ duration: 300 }}>
+									<div class="item-emoji">
+										<ReceiptEmoji emoji={item.emoji} size={20} />
+									</div>
 									<span class="item-text">{item.text}</span>
-
 									{#if isAuthenticated}
 										<div class="item-actions">
 											<button
 												class="edit-button"
-												onclick={() => editItem(group as FoodGroupLabel, index)}
+												onclick={() => editItem(currentList, index)}
 												title="Edit item"
 											>
-												✏️
+												(e)
 											</button>
 											<button
 												class="delete-button"
-												onclick={() => deleteItem(group as FoodGroupLabel, index)}
+												onclick={() => deleteItem(currentList, index)}
 												title="Delete item"
 											>
-												🗑️
+												(x)
 											</button>
 										</div>
 									{/if}
 								</div>
 							{/each}
 						</div>
-					</div>
-				{/each}
-			</div>
-		{:else}
-			<!-- Mobile layout: single list with navigation in header -->
-			<div class="list-single">
-				<div class="mobile-header-nav">
-					<div class="mobile-header-content {currentList}">
-						<h2 class="list-title {currentList}">
-							{currentList}
-						</h2>
+					{/if}
 
-						<div class="nav-pill-container">
-							<!-- Current list emoji (front and overlapping) -->
-							<button class="nav-pill active">
-								<span class="nav-emoji">
-									{currentList === 'protein' ? '🐔' : currentList === 'carb' ? '🍚' : '🥦'}
-								</span>
-							</button>
-
-							<!-- Other list emojis (to the right) -->
-							{#each ['protein', 'carb', 'veggie'] as listType}
-								{#if listType !== currentList}
-									<button
-										class="nav-pill"
-										onclick={() => switchList(listType as FoodGroupLabel)}
-										onkeydown={(e) => {
-											if (e.key === 'Enter' || e.key === ' ') {
-												e.preventDefault();
-												switchList(listType as FoodGroupLabel);
-											}
-										}}
-									>
-										<span class="nav-emoji">
-											{listType === 'protein' ? '🐔' : listType === 'carb' ? '🍚' : '🥦'}
-										</span>
-									</button>
-								{/if}
-							{/each}
-
-							<!-- Trash button -->
-						</div>
-
-						<div class="mobile-header-actions">
+					<div class="receipt-divider">**********************************</div>
+					<div class="receipt-footer">
+						{#if isAuthenticated}
 							<button
-								class="reset-button mobile-reset-button"
-								onclick={(e) => {
-									e.stopPropagation();
-									toggleResetModal();
+								class="action-button"
+								onclick={() => {
+									isAddingItem = true;
+									editingItemIndex = null;
+									newItemText = '';
+									newItemEmoji = '';
 								}}
-								title="Reset all lists"
 							>
-								🍽️
+								ADD ITEM
 							</button>
-							{#if isAuthenticated}
-								<button
-									class="add-button header-add-button"
-									onclick={() => {
-										isAddingItem = true;
-										editingItemIndex = null;
-										newItemText = '';
-										newItemEmoji = '';
-									}}
-								>
-									+
-								</button>
-							{/if}
-						</div>
+						{/if}
+						<button
+							class="action-button reset-button"
+							onclick={(e) => {
+								e.stopPropagation();
+								toggleResetModal();
+							}}
+							title="Reset all lists"
+						>
+							RESET ALL
+						</button>
 					</div>
-				</div>
-				<div class="list-items">
-					{#each foodItems[currentList] as item, index}
-						<div class="list-item" in:fade={{ duration: 50 }} id={`item-${currentList}-${index}`}>
-							<span class="item-emoji">{item.emoji}</span>
-							<span class="item-text">{item.text}</span>
-
-							{#if isAuthenticated}
-								<div class="item-actions">
-									<button
-										class="edit-button"
-										onclick={() => editItem(currentList, index)}
-										title="Edit item"
-									>
-										✏️
-									</button>
-									<button
-										class="delete-button"
-										onclick={() => deleteItem(currentList, index)}
-										title="Delete item"
-									>
-										🗑️
-									</button>
-								</div>
-							{/if}
-						</div>
-					{/each}
 				</div>
 			</div>
 		{/if}
@@ -663,380 +665,307 @@
 </main>
 
 <style>
+	/* --- FONT SETUP --- */
+	@font-face {
+		font-family: 'Merchant Copy';
+		src: url('/fonts/Merchant-Copy.ttf') format('TrueType');
+	}
+
 	main {
-		background-color: #f5f5f5;
+		min-height: 100vh;
 		padding: 1rem;
-		font-family:
-			system-ui,
-			-apple-system,
-			sans-serif;
-		display: flex;
-		flex-direction: column;
+		font-family: 'Merchant Copy', 'Courier New', Courier, monospace;
+		background-color: #f5f5f5;
+		color: #333;
 	}
 
-	.header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 1rem;
+	.page-header {
+		max-width: 1200px;
+		margin: 0 auto 1rem auto;
+		text-align: left;
 	}
 
-	.nav-items {
-		display: flex;
-		gap: 1rem;
-		align-items: center;
-	}
-
-	.header-buttons {
-		display: flex;
-		gap: 1rem;
-		align-items: center;
-	}
-
-	.auth-button {
-		background: none;
-		border: none;
-		font-size: 1.5rem;
-		cursor: pointer;
-		padding: 0.5rem;
-	}
-
-	.auth-button {
-		opacity: 0.7;
-		transition: opacity 0.2s ease;
-	}
-
-	.auth-button.authenticated {
-		opacity: 1;
-		color: #2196f3;
-	}
-
-	.lists-container {
-		padding: 0 1rem;
-		display: flex;
-		flex-direction: column;
-	}
-
-	/* Desktop layout */
-	.list-columns {
-		display: flex;
-		gap: 1rem;
-		justify-content: space-between;
-	}
-
-	.list-column {
-		flex: 1;
-		background-color: white;
-		border-radius: 5px;
-		box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
-		display: flex;
-		flex-direction: column;
-	}
-
-	/* Mobile layout */
-	.list-single {
-		background-color: white;
-		border-radius: 5px;
-		box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
-		display: flex;
-		flex-direction: column;
-		max-width: 600px;
+	.receipts-container {
+		max-width: 1200px;
 		margin: 0 auto;
 	}
 
-	.list-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 1rem;
-		border-bottom: 1px solid #eee;
+	/* Desktop: 3 receipts side by side */
+	.receipts-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 2rem;
 	}
 
-	.list-header h2 {
-		margin: 0;
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		text-transform: capitalize;
-	}
-
-	.emoji-icon {
-		font-size: 1.2em;
-	}
-
-	/* Color coding for lists */
-	.list-header.protein {
-		border-left: 5px solid brown;
-	}
-
-	.list-header.carb {
-		border-left: 5px solid rgb(141, 90, 98);
-	}
-
-	.list-header.veggie {
-		border-left: 5px solid green;
-	}
-
-	.list-items {
-		padding: 0.5rem;
-		transition:
-			opacity 0.15s ease,
-			transform 0.15s ease;
-	}
-
-	.list-item {
-		display: flex;
-		align-items: center;
-		padding: 0.75rem;
-		border-radius: 5px;
-		margin-bottom: 0.5rem;
-		background-color: #f9f9f9;
+	.receipt-container {
+		background: #fdfdfd;
+		padding: 1.5rem;
+		box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
 		position: relative;
 	}
 
-	.item-emoji {
-		font-size: 1.5rem;
-		margin-right: 1rem;
-		width: 2rem;
-		display: inline-block;
+	.receipt-container::after {
+		content: '';
+		position: absolute;
+		bottom: -15px;
+		left: 0;
+		right: 0;
+		height: 30px;
+		background:
+			linear-gradient(135deg, transparent 75%, #e0e0e0 75%) 0 50%,
+			linear-gradient(45deg, transparent 75%, #e0e0e0 75%) 0 50%;
+		background-size: 30px 30px;
+		background-repeat: repeat-x;
+	}
+
+	/* Mobile: single receipt */
+	.receipt-container.mobile {
+		max-width: 380px;
+		margin: 0 auto;
+	}
+
+	.receipt-header {
 		text-align: center;
+		margin-bottom: 1rem;
+	}
+
+	.receipt-header h2 {
+		font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+		font-weight: bold;
+		text-transform: uppercase;
+		font-size: 1.5rem;
+		margin: 0;
+		letter-spacing: 0.05em;
+	}
+
+	.receipt-subtitle {
+		margin: 0.25rem 0;
+		font-size: 0.9rem;
+		font-weight: bold;
+	}
+
+	.date {
+		margin: 0.25rem 0;
+		font-size: 0.8rem;
+		color: #666;
+	}
+
+	.receipt-divider {
+		font-size: 1rem;
+		text-align: center;
+		overflow: hidden;
+		white-space: nowrap;
+		margin: 1rem 0;
+		color: #555;
+	}
+
+	/* Mobile navigation with underlined text */
+	.mobile-nav {
+		display: flex;
+		justify-content: center;
+		gap: 1rem;
+		margin: 1rem 0;
+		padding: 0 1rem;
+	}
+
+	.nav-button {
+		background: none;
+		border: none;
+		font-family: inherit;
+		font-size: 0.9rem;
+		font-weight: bold;
+		text-transform: uppercase;
+		color: #666;
+		cursor: pointer;
+		padding: 0.5rem 0;
+		position: relative;
+		transition: color 0.2s ease;
+	}
+
+	.nav-button.active {
+		color: #333;
+	}
+
+	.nav-button.active::after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 2px;
+		background-color: #333;
+	}
+
+	.nav-button:hover {
+		color: #333;
+	}
+
+	.empty-state {
+		text-align: center;
+		padding: 2rem 0;
+		color: #666;
+		font-size: 0.9rem;
+		text-transform: uppercase;
+	}
+
+	.receipt-items {
+		margin-bottom: 1rem;
+	}
+
+	.item-line {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		margin-bottom: 0.5rem;
+		line-height: 1.2;
+		font-size: 1rem;
+		position: relative;
 	}
 
 	.item-text {
-		flex-grow: 1;
-		text-transform: capitalize;
+		text-transform: uppercase;
+		order: 1;
+		flex: 1;
+	}
+
+	.item-emoji {
+		padding-right: 0.5rem;
+		order: 0;
+		line-height: 1;
 	}
 
 	.item-actions {
 		display: flex;
-		gap: 0.5rem;
+		gap: 0.25rem;
+		order: 2;
+		margin-left: auto;
 	}
 
 	.edit-button,
 	.delete-button {
 		background: none;
 		border: none;
-		font-size: 1rem;
+		font-family: inherit;
+		color: #999;
 		cursor: pointer;
-		padding: 0.25rem;
-		opacity: 0.7;
-		transition:
-			opacity 0.2s ease,
-			transform 0.2s ease;
+		padding: 0 0.25rem;
+		font-size: 0.9rem;
+		transition: color 0.2s ease;
 	}
 
-	.edit-button:hover,
+	.edit-button:hover {
+		color: #2196f3;
+	}
+
 	.delete-button:hover {
-		opacity: 1;
-		transform: scale(1.1);
+		color: #d32f2f;
 	}
 
-	/* Mobile navigation */
-	.mobile-header-nav {
-		background-color: #f9f9f9;
-		border-radius: 1rem;
-		margin-bottom: 1rem;
-		overflow: hidden;
+	.receipt-footer {
+		text-align: center;
+		margin-top: 1rem;
 	}
 
-	.mobile-header-content {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1rem;
-		padding: 1rem;
-	}
-
-	.mobile-header-content.protein {
-		border-left: 5px solid brown;
-	}
-
-	.mobile-header-content.carb {
-		border-left: 5px solid rgb(141, 90, 98);
-	}
-
-	.mobile-header-content.veggie {
-		border-left: 5px solid green;
-	}
-
-	.nav-pill-container {
-		display: flex;
-		align-items: center;
-		padding: 0.5rem;
-		background-color: #f9f9f9;
-		border-radius: 2rem;
-		position: relative;
-	}
-
-	.nav-pill {
-		background-color: #e0e0e0;
-		border: none;
-		font-size: 1.5rem;
+	.action-button {
+		font-family: inherit;
+		background-color: transparent;
+		border: 2px solid #333;
+		padding: 0.75rem 1rem;
 		cursor: pointer;
-		padding: 0.5rem 1.5rem;
-		border-radius: 2rem;
+		font-weight: bold;
+		text-transform: uppercase;
 		transition: all 0.2s ease;
-		opacity: 0.8;
-		position: relative;
-		z-index: 1;
-		margin-right: -0.8rem;
-		min-width: 3.5rem;
-	}
-
-	.nav-pill:not(.active) {
-		border-radius: 0 2rem 2rem 0;
-		padding-left: 1.2rem;
-		padding-right: 1.5rem;
-	}
-
-	.nav-pill:not(.active):nth-child(2) {
-		z-index: 2;
-	}
-
-	.nav-pill:not(.active):nth-child(3) {
-		z-index: 1;
-	}
-
-	.nav-pill:hover {
-		opacity: 1;
-		transform: scale(1.05);
-	}
-
-	.nav-pill.active {
-		background-color: #fff;
-		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-		transform: scale(1.1);
-		opacity: 1;
-		z-index: 4;
-		margin-right: -0.8rem;
-		border-radius: 2rem;
-	}
-
-	.nav-emoji {
-		font-size: 1.2rem;
+		font-size: 0.8rem;
+		letter-spacing: 0.05em;
+		margin: 0.25rem;
 		display: block;
+		width: calc(100% - 0.5rem);
 	}
 
-	.list-title {
-		font-size: 1.5rem;
-		font-weight: 700;
-		color: #333;
-		text-transform: capitalize;
-		margin: 0;
-		flex-shrink: 0;
-	}
-
-	.list-title.protein {
-		color: brown;
-	}
-
-	.list-title.carb {
-		color: rgb(141, 90, 98);
-	}
-
-	.list-title.veggie {
-		color: green;
+	.action-button:hover {
+		background-color: #333;
+		color: #fdfdfd;
 	}
 
 	.reset-button {
-		background: none;
-		border: none;
-		font-size: 1.5rem;
-		cursor: pointer;
-		padding: 0.5rem;
-		opacity: 0.7;
-		transition: opacity 0.2s ease;
+		border-color: #999;
+		color: #777;
 	}
 
 	.reset-button:hover {
-		opacity: 1;
-		transform: scale(1.1);
+		background-color: #d32f2f;
+		border-color: #d32f2f;
+		color: white;
 	}
 
-	/* Modal close button */
+	/* Modal styles - Receipt themed */
+	.modal-overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.5);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 1000;
+		padding: 1rem;
+		margin: 0;
+		border: none;
+		backdrop-filter: blur(2px);
+	}
+
+	.modal {
+		background-color: #fdfdfd;
+		border-radius: 0;
+		padding: 2rem;
+		max-width: 400px;
+		width: 100%;
+		position: relative;
+		box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
+		font-family: 'Merchant Copy', 'Courier New', Courier, monospace;
+	}
+
+	.modal::after {
+		content: '';
+		position: absolute;
+		bottom: -15px;
+		left: 0;
+		right: 0;
+		height: 30px;
+		background:
+			linear-gradient(135deg, transparent 75%, #e0e0e0 75%) 0 50%,
+			linear-gradient(45deg, transparent 75%, #e0e0e0 75%) 0 50%;
+		background-size: 30px 30px;
+		background-repeat: repeat-x;
+	}
+
+	.modal h3 {
+		margin: 0 0 1rem 0;
+		font-size: 1.2rem;
+		text-transform: uppercase;
+		text-align: center;
+		font-weight: bold;
+		letter-spacing: 0.05em;
+	}
+
 	.modal-close-button {
 		position: absolute;
 		top: 1rem;
 		right: 1rem;
 		background: none;
 		border: none;
-		font-size: 1.25rem;
+		font-size: 1.2rem;
 		cursor: pointer;
 		padding: 0.5rem;
-		opacity: 0.7;
-		transition: opacity 0.2s;
+		font-family: inherit;
+		color: #999;
+		transition: color 0.2s ease;
 	}
 
 	.modal-close-button:hover {
-		opacity: 1;
-	}
-
-	/* Add button */
-	.add-button {
-		background-color: #4caf50;
-		color: white;
-		border: none;
-		width: 2rem;
-		height: 2rem;
-		border-radius: 50%;
-		font-size: 1.5rem;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
-		line-height: 1;
-		padding: 0;
-		opacity: 0.7;
-		transition:
-			opacity 0.2s ease,
-			transform 0.2s ease;
-	}
-
-	.add-button:hover {
-		opacity: 1;
-		transform: scale(1.1);
-	}
-
-	.header-add-button {
-		flex-shrink: 0;
-		width: 2.5rem;
-		height: 2.5rem;
-		font-size: 1.2rem;
-	}
-
-	/* Modal */
-	.modal-overlay {
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background-color: rgba(0, 0, 0, 0.5);
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		z-index: 10;
-		padding: 0;
-		margin: 0;
-		width: 100%;
-		height: 100%;
-		border: none;
-	}
-
-	.modal {
-		background-color: white;
-		padding: 2rem;
-		border-radius: 5px;
-		width: 90%;
-		max-width: 500px;
-		max-height: 90vh;
-		position: relative;
-		overflow-y: auto;
-	}
-
-	.modal h3 {
-		margin-top: 0;
-		text-transform: capitalize;
+		color: #d32f2f;
 	}
 
 	.form-group {
@@ -1047,180 +976,197 @@
 		display: block;
 		margin-bottom: 0.5rem;
 		font-weight: bold;
+		color: #333;
+		text-transform: uppercase;
+		font-size: 0.9rem;
+		letter-spacing: 0.05em;
 	}
 
 	.form-group input {
 		width: 100%;
 		padding: 0.75rem;
-		border: 1px solid #ddd;
-		border-radius: 5px;
+		border: 2px solid #333;
+		border-radius: 0;
 		font-size: 1rem;
+		box-sizing: border-box;
+		font-family: inherit;
+		background-color: #fdfdfd;
+		text-transform: uppercase;
+	}
+
+	.form-group input:focus {
+		outline: none;
+		border-color: #555;
+		background-color: #fff;
 	}
 
 	.helper-text {
-		color: #666;
-		font-size: 0.8rem;
-		margin-top: 0.25rem;
 		display: block;
+		margin-top: 0.5rem;
+		font-size: 0.8rem;
+		color: #666;
+		text-transform: none;
 	}
 
 	.emoji-suggestions {
 		display: flex;
-		flex-wrap: wrap;
 		gap: 0.5rem;
-		margin: 1rem 0;
+		flex-wrap: wrap;
+		margin-top: 0.5rem;
+		justify-content: center;
 	}
 
 	.emoji-button {
-		background: none;
-		border: 1px solid #ddd;
-		border-radius: 5px;
-		font-size: 1.5rem;
+		background: #fdfdfd;
+		border: 2px solid #333;
+		padding: 0.5rem 0.75rem;
+		border-radius: 0;
 		cursor: pointer;
-		padding: 0.5rem;
-		transition: transform 0.1s ease;
+		font-size: 1.2rem;
+		transition: all 0.2s ease;
+		font-family: inherit;
 	}
 
 	.emoji-button:hover {
-		transform: scale(1.1);
+		background-color: #333;
+		color: #fdfdfd;
 	}
 
 	.form-actions {
 		display: flex;
-		justify-content: flex-end;
 		gap: 1rem;
-		margin-top: 1.5rem;
+		justify-content: center;
+		margin-top: 2rem;
+		padding-top: 1rem;
+		border-top: 2px dashed #333;
 	}
 
 	.cancel-button,
 	.save-button {
 		padding: 0.75rem 1.5rem;
-		border: none;
-		border-radius: 5px;
-		font-weight: bold;
+		border: 2px solid #333;
+		border-radius: 0;
 		cursor: pointer;
+		font-size: 0.9rem;
+		font-family: inherit;
+		font-weight: bold;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		transition: all 0.2s ease;
+		background-color: transparent;
+		color: #333;
 	}
 
 	.cancel-button {
-		background-color: #f0f0f0;
+		border-color: #999;
+		color: #777;
 	}
 
 	.save-button {
-		background-color: #4caf50;
-		color: white;
+		background-color: #333;
+		color: #fdfdfd;
 	}
 
 	.cancel-button:hover {
-		background-color: #e0e0e0;
+		background-color: #999;
+		color: #fdfdfd;
 	}
 
 	.save-button:hover {
-		background-color: #45a049;
+		background-color: #555;
+		border-color: #555;
 	}
 
 	.modal .delete-button {
-		background-color: #ff4444;
-		color: white;
-		border: none;
-		padding: 0.5rem 1rem;
-		border-radius: 4px;
+		background-color: transparent;
+		color: #d32f2f;
+		border: 2px solid #d32f2f;
+		border-radius: 0;
+		padding: 0.75rem 1.5rem;
 		cursor: pointer;
 		font-size: 0.9rem;
-		transition: background-color 0.2s ease;
+		font-family: inherit;
+		font-weight: bold;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		transition: all 0.2s ease;
 	}
 
 	.modal .delete-button:hover {
-		background-color: #cc0000;
+		background-color: #d32f2f;
+		color: #fdfdfd;
 	}
 
 	.reset-modal {
-		max-width: 400px;
+		text-align: center;
 	}
 
 	.reset-modal p {
-		margin: 1rem 0;
+		margin: 1rem 0 2rem 0;
 		color: #666;
 		line-height: 1.5;
+		text-transform: none;
+		font-size: 1rem;
 	}
 
 	.reset-modal h3 {
-		color: #ff4444;
+		color: #d32f2f;
 		margin-bottom: 1rem;
 	}
 
+	.reset-modal::before {
+		content: '**********************************';
+		display: block;
+		text-align: center;
+		color: #555;
+		margin-bottom: 1rem;
+		font-size: 1rem;
+	}
+
+	.reset-modal::after {
+		content: '**********************************';
+		display: block;
+		text-align: center;
+		color: #555;
+		margin-top: 1rem;
+		font-size: 1rem;
+	}
+
+	/* Mobile styles */
 	@media (max-width: 767px) {
 		main {
 			padding: 0.5rem;
-			padding-bottom: 0;
 		}
 
-		.lists-container {
-			padding: 0;
+		.receipts-grid {
+			grid-template-columns: 1fr;
+			gap: 1rem;
 		}
 
-		.list-single {
-			max-width: none;
-			margin: 0;
+		.receipt-header h2 {
+			font-size: 2rem;
 		}
 
-		.mobile-header-nav {
-			margin-bottom: 0.5rem;
-			gap: 0.5rem;
+		.receipt-header p {
+			font-size: 1.1rem;
 		}
 
-		.nav-pill-container {
-			padding: 0.3rem;
+		.receipt-divider {
+			font-size: 1.25rem;
 		}
 
-		.nav-pill {
-			padding: 0.4rem 1.2rem;
-			font-size: 1.2rem;
-			margin-right: -0.6rem;
-			min-width: 3rem;
+		.item-line {
+			font-size: 1.25rem;
 		}
 
-		.nav-pill:not(.active) {
-			padding-left: 1rem;
-			padding-right: 1.2rem;
+		.mobile-nav {
+			flex-direction: row;
+			justify-content: space-around;
 		}
 
-		.nav-pill.active {
-			margin-right: -0.6rem;
-		}
-
-		.mobile-header-actions {
-			display: flex;
-			gap: 0.5rem;
-			align-items: center;
-		}
-
-		.mobile-reset-button {
-			background: none;
-			border: none;
-			font-size: 1.5rem;
-			cursor: pointer;
-			padding: 0.5rem;
-			opacity: 0.7;
-			transition: opacity 0.2s ease;
-		}
-
-		.mobile-reset-button:hover {
-			opacity: 1;
-			transform: scale(1.1);
-		}
-
-		.nav-emoji {
-			font-size: 1rem;
-		}
-
-		.list-title {
-			font-size: 1.3rem;
-		}
-
-		.header-add-button {
-			width: 2rem;
-			height: 2rem;
-			font-size: 1rem;
+		.nav-button {
+			font-size: 0.8rem;
+			padding: 0.75rem 0;
 		}
 
 		.form-actions {
@@ -1230,6 +1176,31 @@
 		.cancel-button,
 		.save-button {
 			width: 100%;
+		}
+	}
+
+	/* Desktop adjustments */
+	@media (min-width: 768px) {
+		.receipt-header h2 {
+			font-size: 1.5rem;
+		}
+
+		.receipt-header p {
+			font-size: 0.9rem;
+		}
+
+		.receipt-divider {
+			font-size: 1rem;
+		}
+
+		.item-line {
+			font-size: 1rem;
+		}
+
+		.action-button {
+			display: inline-block;
+			width: auto;
+			margin: 0.25rem 0.125rem;
 		}
 	}
 </style>
