@@ -315,7 +315,7 @@
 
 <main>
 	<div class="page-header">
-		<BackButton href="/" text="← Back to Home" />
+		<BackButton href="/" text="← Back to Spinner" />
 	</div>
 
 	<!-- Receipt styled lists -->
@@ -683,6 +683,12 @@
 		max-width: 1200px;
 		margin: 0 auto 1rem auto;
 		text-align: left;
+	}
+
+	@media (max-width: 600px) {
+		.page-header {
+			max-width: 380px;
+		}
 	}
 
 	.receipts-container {

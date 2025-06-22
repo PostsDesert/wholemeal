@@ -44,6 +44,7 @@ List View
 - The bottom bar is at the wrong height on mobile devices and leaves some random space below it.
 - The back gesture should be styled more like the combo (receipt view)
 - Since we don't have anything at the bottom of the page, the lists should now show their full height.
+- On mobile, the back button should match the style and positioning of the combo page.
 
 
 Spinner View
@@ -61,6 +62,7 @@ Spinner View
 - You shouldn't be able to add a combo in the default items (before first spin).
 - On initial load, don't show redirection text and redirection screen, just load the spinner view.
 - Combo counter icon should always be visible if combos exist.
+- Clicking the swipe button should dismiss the message after adding the combo.
 
 - Auth Screen should be disabled behind a feature flag (or disabled)
 - The user should be logged in and always able to edit lists.
@@ -69,13 +71,11 @@ Spinner View
 ### Todo (before internal release)
 
 Spinner View:
-- Clicking the swipe button should dismiss the message after adding the combo.
 - Add simple animation when adding to cart
     - I'm thinking that the text disappears, the emojis all move the center and a cart emoji fades in over the top as the emojis shrink. Then the cart fades out. This should be ~1 second.
 - Buttons should higher off the floor on iOS PWA (is there a safe area that we can use for the bottom of the screen?)
 
 Lists View:
-- On mobile, the back button should match the style and positioning of the combo page.
 - Instead of shrinking in side when going from desktop to mobile, the lists should just animate to a single list view.
 
 Combo View:
