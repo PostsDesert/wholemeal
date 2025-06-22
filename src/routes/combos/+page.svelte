@@ -308,13 +308,17 @@
 					<button class="action-button" onclick={copyToClipboard}>
 						COPY LIST
 						{#if copySuccess}
-							<span class="success-message">✓</span>
+							<span class="success-message"
+								><ReceiptEmoji emoji="✓" size={24} pixelation={64} color="#4caf50" /></span
+							>
 						{/if}
 					</button>
 					<button class="action-button" onclick={sendEmail}>
 						SEND VIA EMAIL
 						{#if emailSuccess}
-							<span class="success-message">✓</span>
+							<span class="success-message"
+								><ReceiptEmoji emoji="✓" size={24} pixelation={64} color="#4caf50" /></span
+							>
 						{/if}
 					</button>
 					{#if combos.length > 0}

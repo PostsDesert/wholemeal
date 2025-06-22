@@ -6,6 +6,7 @@
 	export let emoji: string;
 	export let size: number = 24; // The final display size in pixels
 	export let pixelation: number = 20; // The intermediate resolution. Higher = more detail.
+	export let color: string | undefined = undefined; // Optional: override color for all "on" pixels (e.g. "#4caf50")
 
 	let canvas: HTMLCanvasElement;
 
@@ -54,6 +55,16 @@
 		const bayerFactor = 17;
 		const inkColor = 40; // Used only for monochrome mode
 
+		// Helper: parse hex color to [r,g,b]
+		function hexToRgb(hex: string): [number, number, number] | null {
+			let c = hex.replace('#', '');
+			if (c.length === 3) c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
+			if (c.length !== 6) return null;
+			const num = parseInt(c, 16);
+			return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
+		}
+		const overrideRgb = color ? hexToRgb(color) : null;
+
 		for (let y = 0; y < pixelation; y++) {
 			for (let x = 0; x < pixelation; x++) {
 				const index = (y * pixelation + x) * 4;
@@ -82,7 +93,12 @@
 							break;
 
 						case 'color':
-							// Do nothing to the RGB values, just ensure it's opaque.
+							if (overrideRgb) {
+								data[index] = overrideRgb[0];
+								data[index + 1] = overrideRgb[1];
+								data[index + 2] = overrideRgb[2];
+							}
+							// else: keep original color
 							break;
 					}
 					data[index + 3] = 255; // Make the "on" pixel fully opaque

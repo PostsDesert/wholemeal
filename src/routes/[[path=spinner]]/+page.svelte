@@ -22,6 +22,8 @@
 	let isDesktop = $state(false);
 	const DESKTOP_BREAKPOINT = 768; // in pixels
 
+	let comboButton: HTMLButtonElement | null = $state(null); // Reference to the combo button
+
 	// Check if we're on desktop
 	function checkIfDesktop() {
 		if (browser) {
@@ -116,6 +118,7 @@
 	let showComboCount = $state(false);
 	let comboCount = $state(0);
 	let comboMessageDismissed = $state(false);
+	let spinJustStarted = false;
 
 	function createFoodGroup(label: FoodGroupLabel, emoji: string, items: FoodItem[]): FoodGroup {
 		return {
@@ -154,29 +157,9 @@
 			return;
 		}
 
-		// Check if click is on navigation elements or create-combo-container
-		if (event && event.target) {
-			const target = event.target;
-			// Check if the clicked element or any of its parents contain navigation elements
-			if (
-				target.closest('.navigation-hints') ||
-				target.closest('.create-combo-container') ||
-				target.closest('.hint') ||
-				target.closest('.create-combo-message')
-			) {
-				return;
-			}
-		}
-
 		// Skip slide transitions and directly toggle rotation
 		allRotating ? stopRotation() : startRotation();
 	}
-
-	let savestore = false;
-	let hasFaded = false;
-	// if (hasFaded) { // This logic seems to be unused or incomplete, consider removing or completing
-	// 	window.localStorage.setItem('hasFaded', 'true');
-	// }
 
 	// Handle keyboard navigation
 	function handleKeyboardNavigation(e: KeyboardEvent) {
@@ -189,6 +172,9 @@
 			// Go to combo page
 			goto('/combos');
 		} else if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === 's' || e.key === 'j') {
+			if (comboButton) {
+				comboButton.focus();
+			}
 			// Add to combo
 			addCombo(null);
 		}
@@ -246,9 +232,7 @@
 				console.error('Error loading auth state:', e);
 			}
 		}
-		hasFaded = window.localStorage.getItem('hasFaded') !== 'true';
 		visible = true;
-		savestore = true; // This variable doesn't seem to be used elsewhere.
 	});
 
 	onDestroy(() => {
@@ -328,7 +312,11 @@
 			if (typeof window !== 'undefined') {
 				localStorage.setItem('spinner-nav-visible', 'true');
 			}
-			comboMessageDismissed = false; // Reset message dismissal for new spin cycle
+			// Only reset if a new spin just started
+			if (spinJustStarted) {
+				comboMessageDismissed = false;
+				spinJustStarted = false;
+			}
 
 			// Update combo count when first rotation completes
 			updateComboCountFromStorage();
@@ -381,6 +369,7 @@
 	function startRotation() {
 		if (!allRotating) {
 			hasStarted = true; // Mark that the game has started
+			spinJustStarted = true;
 			shuffleArray(items.protein.items);
 			shuffleArray(items.carb.items);
 			shuffleArray(items.veggie.items);
@@ -425,8 +414,13 @@
 		return cleanup;
 	});
 
-	function addCombo(event: Event | null) {
+	function addCombo(event: MouseEvent | null) {
 		if (!shouldHandleInteraction() || !firstRotationComplete) return;
+		// Only dissmiss the message here if it was a click
+		// Otherwise, we'll dismiss on keyboard up.
+		if (event && event.detail >= 1) {
+			comboMessageDismissed = true;
+		}
 
 		if (event) {
 			event.stopPropagation();
@@ -569,13 +563,20 @@
 		<!-- Navigation hints -->
 		{#if !allRotating && hasStarted && !comboMessageDismissed}
 			<div class="create-combo-container">
-				<div class="create-combo-message">
+				<button
+					bind:this={comboButton}
+					type="button"
+					class="create-combo-message"
+					onclick={addCombo}
+					tabindex="0"
+					aria-label="Create combo"
+				>
 					{#if isDesktop}
 						Press enter to create combo
 					{:else}
 						Swipe ↕️ to create combo
 					{/if}
-				</div>
+				</button>
 			</div>
 		{/if}
 		{#if firstRotationComplete}
@@ -728,7 +729,7 @@
 		display: flex;
 		justify-content: center;
 		z-index: 10;
-		pointer-events: none;
+		pointer-events: auto;
 	}
 
 	/* Create combo instruction message */
@@ -740,8 +741,17 @@
 		font-size: 0.9rem;
 		font-weight: 500;
 		text-align: center;
-		pointer-events: none;
 		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+		border: none;
+		background: none;
+		cursor: pointer;
+		background-color: rgba(255, 255, 255, 0.9);
+		pointer-events: auto;
+		display: inline-block;
+	}
+
+	.create-combo-message:focus {
+		outline: 2px solid #aaa;
 	}
 
 	main .food-group-container {

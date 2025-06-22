@@ -33,6 +33,7 @@ Combo Page
 - On small width devices, the text should look like it does on the large width devices. Right now it gets way too small and narrow.
 - Change the url from '/combo' to '/combos'
 - Don't have the background fade in. It should just immediately appear.
+- The green checkbox after copying to clipboard is not applied with receipt filter.
 
 List View
 - When clicking the auth button it should open the same window as the spinner view. Right now, when the user is authenticated they still have to click the auth button. The auth button should just pull up the same screen as the other views and not change the edit state.
@@ -71,18 +72,20 @@ Spinner View:
 - Clicking the swipe button should dismiss the message after adding the combo.
 - Add simple animation when adding to cart
     - I'm thinking that the text disappears, the emojis all move the center and a cart emoji fades in over the top as the emojis shrink. Then the cart fades out. This should be ~1 second.
+- Buttons should higher off the floor on iOS PWA (is there a safe area that we can use for the bottom of the screen?)
 
 Lists View:
 - On mobile, the back button should match the style and positioning of the combo page.
+- Instead of shrinking in side when going from desktop to mobile, the lists should just animate to a single list view.
 
 Combo View:
-- The green checkbox after copying to clipboard is not applied with receipt filter.
 
-
+General:
 - Refactor out receipt component
     - Font should be bigger on mobile devices
-
 - Refactor out button component (option for color)
+- Make it easier to tell that swipe navigation gestures are available on mobile devices.
+- Add socials on bottom of receipts (Github, LinkedIn, BlueSky?)
 
 
 
