@@ -46,6 +46,7 @@ List View
 - The back gesture should be styled more like the combo (receipt view)
 - Since we don't have anything at the bottom of the page, the lists should now show their full height.
 - On mobile, the back button should match the style and positioning of the combo page.
+- Instead of shrinking the list width when going from desktop to mobile, the lists should just switch to a single list list.
 
 
 Spinner View
@@ -74,9 +75,8 @@ Spinner View:
 - Experiment with different fonts.
 
 Lists View:
-- Instead of shrinking the list width when going from desktop to mobile, the lists should just switch to a single list list.
-- The list header should have a giant black and white emoji of the list emoji in the background (might be only the lower half of the emoji). Then the labels and stuff with be the opposite color on top of it.
-    - The emoji might be back and white or a nice solid color.
+- The list header should have a giant black and white emoji of the list emoji in the background. it should stretch slightly off the receipt but you can only see the part still on the receipt. Then the labels and stuff with be the opposite color on top of it.
+    - The emoji might be back and white or a nice solid color. Try out each first with the solid color option picked from the emoji. The target emojis are 🐔, 🍠, 🥦.
 
 Combo View:
 

@@ -39,7 +39,7 @@
 
 	// Media query for responsive design
 	let isDesktop = $state(false);
-	const DESKTOP_BREAKPOINT = 768; // in pixels
+	const DESKTOP_BREAKPOINT = 1260; // in pixels
 
 	// Check if we're on desktop
 	function checkIfDesktop() {
@@ -1140,7 +1140,7 @@
 	}
 
 	/* Mobile styles */
-	@media (max-width: 767px) {
+	@media (max-width: 1259px) {
 		main {
 			padding: 0.5rem;
 		}
@@ -1187,7 +1187,7 @@
 	}
 
 	/* Desktop adjustments */
-	@media (min-width: 768px) {
+	@media (min-width: 1260px) {
 		.receipt-header h2 {
 			font-size: 1.5rem;
 		}
