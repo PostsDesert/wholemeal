@@ -663,6 +663,7 @@
 		display: flex;
 		justify-content: space-between;
 		padding: 0 2rem;
+		padding-bottom: env(safe-area-inset-bottom);
 		pointer-events: none;
 	}
 
@@ -670,6 +671,7 @@
 		.navigation-hints {
 			bottom: 0.5rem;
 			padding: 0 1rem;
+			padding-bottom: env(safe-area-inset-bottom);
 			justify-content: space-between;
 		}
 	}
@@ -722,8 +724,7 @@
 	/* Center message container */
 	.create-combo-container {
 		position: fixed;
-		top: 4%;
-		top: 88%;
+		bottom: calc(3.5rem + env(safe-area-inset-bottom));
 		left: 0;
 		right: 0;
 		display: flex;
@@ -757,25 +758,25 @@
 	main .food-group-container {
 		display: flex;
 		flex-direction: column;
-		justify-content: flex-start;
-		margin-top: 1rem;
+		justify-content: space-around;
 		align-items: center;
 		width: 100vw;
-		height: 100dvh;
 		margin-left: auto;
 		margin-right: auto;
 		padding: 0 1rem;
+		position: absolute;
+		top: 1rem;
+		bottom: 8rem;
 	}
 
 	/* Desktop position for create-combo-message */
 	@media (min-width: 769px) {
 		.create-combo-container {
-			top: 87%;
+			bottom: calc(6.5rem + env(safe-area-inset-bottom));
 		}
 		main .food-group-container {
-			justify-content: flex-start;
-			margin-top: 5rem;
-			align-items: center;
+			top: 5rem;
+			bottom: 10rem;
 		}
 	}
 

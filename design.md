@@ -25,8 +25,9 @@
 ### Done
 Overall:
 - The layout should respect the iOS safe areas on PWA.
-
-
+- Auth Screen should be disabled behind a feature flag (or disabled)
+- The user should be logged in and always able to edit lists.
+- "back to spinner" button should be a component and also the same for both pages
 
 Combo Page
 - The combo page should show the auth button in the top right
@@ -63,20 +64,19 @@ Spinner View
 - On initial load, don't show redirection text and redirection screen, just load the spinner view.
 - Combo counter icon should always be visible if combos exist.
 - Clicking the swipe button should dismiss the message after adding the combo.
-
-- Auth Screen should be disabled behind a feature flag (or disabled)
-- The user should be logged in and always able to edit lists.
-- "back to spinner" button should be a component and also the same for both pages
+- Buttons should higher off the floor on iOS PWA (is there a safe area that we can use for the bottom of the screen?)
 
 ### Todo (before internal release)
 
 Spinner View:
 - Add simple animation when adding to cart
     - I'm thinking that the text disappears, the emojis all move the center and a cart emoji fades in over the top as the emojis shrink. Then the cart fades out. This should be ~1 second.
-- Buttons should higher off the floor on iOS PWA (is there a safe area that we can use for the bottom of the screen?)
+- Experiment with different fonts.
 
 Lists View:
-- Instead of shrinking in side when going from desktop to mobile, the lists should just animate to a single list view.
+- Instead of shrinking the list width when going from desktop to mobile, the lists should just switch to a single list list.
+- The list header should have a giant black and white emoji of the list emoji in the background (might be only the lower half of the emoji). Then the labels and stuff with be the opposite color on top of it.
+    - The emoji might be back and white or a nice solid color.
 
 Combo View:
 
@@ -86,6 +86,8 @@ General:
 - Refactor out button component (option for color)
 - Make it easier to tell that swipe navigation gestures are available on mobile devices.
 - Add socials on bottom of receipts (Github, LinkedIn, BlueSky?)
+- Caching emoji generation to speed up page loads/reduce redundent work.
+- Slim down binary size.
 
 
 
