@@ -329,7 +329,7 @@
 							<div class="receipt-header">
 								<h2>WHOLEMEAL</h2>
 								<p class="receipt-subtitle">
-									{group === 'protein' ? 'PROTEIN' : group === 'carb' ? 'CARBS' : 'VEGGIES'} LIST
+									<span class="emoji-large">{group === 'protein' ? '🐔' : group === 'carb' ? '🍠' : '🥦'}</span> <span class="highlighted-list {group === 'protein' ? 'protein-highlight' : group === 'carb' ? 'carb-highlight' : 'veggie-highlight'}">{group === 'protein' ? 'PROTEIN' : group === 'carb' ? 'CARBS' : 'VEGGIES'}</span> <span class="highlighted-list {group === 'protein' ? 'protein-highlight' : group === 'carb' ? 'carb-highlight' : 'veggie-highlight'}">LIST</span>
 								</p>
 								<p class="date">{new Date().toLocaleDateString()}</p>
 							</div>
@@ -411,8 +411,7 @@
 					<div class="receipt-header">
 						<h2>WHOLEMEAL</h2>
 						<p class="receipt-subtitle">
-							{currentList === 'protein' ? 'PROTEIN' : currentList === 'carb' ? 'CARBS' : 'VEGGIES'}
-							LIST
+							<span class="emoji-large"></span> <span class="highlighted-list {currentList === 'protein' ? 'protein-highlight' : currentList === 'carb' ? 'carb-highlight' : 'veggie-highlight'}">{currentList === 'protein' ? 'PROTEIN' : currentList === 'carb' ? 'CARBS' : 'VEGGIES'}</span>
 						</p>
 						<p class="date">{new Date().toLocaleDateString()}</p>
 					</div>
@@ -747,8 +746,33 @@
 
 	.receipt-subtitle {
 		margin: 0.25rem 0;
-		font-size: 0.9rem;
+		font-size: 2.9rem;
 		font-weight: bold;
+	}
+
+	.emoji-large {
+		font-size: 3rem;
+	}
+
+	.highlighted-list {
+		position: relative;
+		padding: 0.1em 0.3em;
+		border-radius: 3px;
+	}
+
+	.protein-highlight {
+		background: linear-gradient(120deg, rgba(255, 165, 0, 0.4) 0%, rgba(255, 140, 0, 0.6) 100%);
+		box-shadow: inset 0 -0.2em 0 rgba(255, 140, 0, 0.3);
+	}
+
+	.carb-highlight {
+		background: linear-gradient(120deg, rgba(139, 69, 19, 0.4) 0%, rgba(160, 82, 45, 0.6) 100%);
+		box-shadow: inset 0 -0.2em 0 rgba(139, 69, 19, 0.3);
+	}
+
+	.veggie-highlight {
+		background: linear-gradient(120deg, rgba(34, 139, 34, 0.4) 0%, rgba(50, 205, 50, 0.6) 100%);
+		box-shadow: inset 0 -0.2em 0 rgba(34, 139, 34, 0.3);
 	}
 
 	.date {
@@ -1155,7 +1179,7 @@
 		}
 
 		.receipt-header p {
-			font-size: 1.1rem;
+			font-size: 1.7rem;
 		}
 
 		.receipt-divider {
@@ -1193,7 +1217,7 @@
 		}
 
 		.receipt-header p {
-			font-size: 0.9rem;
+			font-size: 2.9rem;
 		}
 
 		.receipt-divider {

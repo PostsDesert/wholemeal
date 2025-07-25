@@ -397,8 +397,7 @@
 		font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 		font-weight: bold;
 		text-transform: uppercase;
-		font-size: 2rem;
-		/* Mobile: 32px (larger than desktop 30px) */
+		font-size: 1.5rem;
 		margin: 0;
 		letter-spacing: 0.05em;
 	}
@@ -549,7 +548,7 @@
 	/* Desktop styles - apply original sizes for larger screens */
 	@media (min-width: 768px) {
 		.receipt-header h2 {
-			font-size: 1.5rem; /* Desktop: 30px */
+			font-size: 1.5rem;
 		}
 
 		.receipt-header p {
