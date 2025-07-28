@@ -78,28 +78,28 @@
 		text-transform: capitalize;
 		font-weight: 700;
 		text-shadow:
-			-2px -2px 0 black,
-			2px -2px 0 black,
-			-2px 2px 0 black,
-			2px 2px 0 black,
-			-2px 0 0 black,
-			2px 0 0 black,
-			0 -2px 0 black,
-			0 2px 0 black;
+			-1px -1px 0 black,
+			1px -1px 0 black,
+			-1px 1px 0 black,
+			1px 1px 0 black,
+			-1px 0 0 black,
+			1px 0 0 black,
+			0 -1px 0 black,
+			0 1px 0 black;
 	}
 
 	/* Apply smaller text-shadow for mobile devices */
 	@media (max-width: 768px) {
 		.food-text {
 			text-shadow:
-				-1.5px -1.5px 0 black,
-				1.5px -1px 0 black,
-				-1px 1.5px 0 black,
-				1.5px 1.5px 0 black,
-				-1.5px 0 0 black,
-				1.5px 0 0 black,
-				0 -1.5px 0 black,
-				0 1.5px 0 black;
+				-1px -1px 0 black,
+				1px -1px 0 black,
+				-1px 1px 0 black,
+				1px 1px 0 black,
+				-1px 0 0 black,
+				1px 0 0 black,
+				0 -1px 0 black,
+				0 1px 0 black;
 		}
 	}
 </style>

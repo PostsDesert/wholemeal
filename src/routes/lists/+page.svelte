@@ -329,12 +329,10 @@
 							<div class="receipt-header">
 								<h2>WHOLEMEAL</h2>
 								<p class="receipt-subtitle">
-									<span class="emoji-large">{group === 'protein' ? '🐔' : group === 'carb' ? '🍠' : '🥦'}</span> <span class="highlighted-list {group === 'protein' ? 'protein-highlight' : group === 'carb' ? 'carb-highlight' : 'veggie-highlight'}">{group === 'protein' ? 'PROTEIN' : group === 'carb' ? 'CARBS' : 'VEGGIES'}</span> <span class="highlighted-list {group === 'protein' ? 'protein-highlight' : group === 'carb' ? 'carb-highlight' : 'veggie-highlight'}">LIST</span>
+									<span class="highlighted-list {group === 'protein' ? 'protein-highlight' : group === 'carb' ? 'carb-highlight' : 'veggie-highlight'}">{group === 'protein' ? 'PROTEIN' : group === 'carb' ? 'CARBS' : 'VEGGIES'}</span>
 								</p>
-								<p class="date">{new Date().toLocaleDateString()}</p>
 							</div>
 							<div class="receipt-divider">**********************************</div>
-
 							{#if foodItems[group as FoodGroupLabel].length === 0}
 								<div class="empty-state" in:fade>
 									<p>NO ITEMS</p>
@@ -739,7 +737,7 @@
 
 	.receipt-subtitle {
 		margin: 0.25rem 0;
-		font-size: 2.9rem;
+		font-size: 1.9rem;
 		font-weight: bold;
 	}
 
@@ -766,12 +764,6 @@
 	.veggie-highlight {
 		background: linear-gradient(120deg, rgba(34, 139, 34, 0.4) 0%, rgba(50, 205, 50, 0.6) 100%);
 		box-shadow: inset 0 -0.2em 0 rgba(34, 139, 34, 0.3);
-	}
-
-	.date {
-		margin: 0.25rem 0;
-		font-size: 0.8rem;
-		color: #666;
 	}
 
 	.receipt-divider {
@@ -1202,10 +1194,6 @@
 	@media (min-width: 1260px) {
 		.receipt-header h2 {
 			font-size: 1.5rem;
-		}
-
-		.receipt-header p {
-			font-size: 2.9rem;
 		}
 
 		.receipt-divider {
