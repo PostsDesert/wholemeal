@@ -75,9 +75,7 @@ Spinner View
 
 Spinner View:
 
-
 Lists View:
-
 
 Combo View:
 
@@ -89,6 +87,9 @@ General:
 - Add socials on bottom of receipts (Github, LinkedIn, BlueSky?)
 - Caching emoji generation to speed up page loads/reduce redundent work.
 - Slim down binary size.
+- Remove unused code.
+    - This include the auth code
+- Update readme with features, and usage instructions.
 
 
 
