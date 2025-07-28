@@ -114,23 +114,22 @@
 		background-color: transparent !important; /* Ensure no background color during fall */
 	}
 
-	.food-emoji.cart_animation_top {
+	.food-emoji.showEmoji.started.cart_animation_top {
 		animation: emojiToCartFromTop 1s ease-in-out;
-		opacity: 1 !important;
 		z-index: 999;
 	}
 
-	.food-emoji.cart_animation_center {
+	.food-emoji.showEmoji.started.cart_animation_center {
 		animation: emojiToCartFromCenter 1s ease-in-out;
-		opacity: 1 !important;
 		z-index: 999;
 	}
 
-	.food-emoji.cart_animation_bottom {
+	.food-emoji.showEmoji.started.cart_animation_bottom {
 		animation: emojiToCartFromBottom 1s ease-in-out;
-		opacity: 1 !important;
 		z-index: 999;
 	}
+
+
 
 	@keyframes emojiToCartFromTop {
 		0% {
@@ -138,16 +137,13 @@
 			opacity: 1;
 		}
 		33% {
-			transform: translate(-50%, calc(-50% + var(--center-offset, 0px))) scale(0.8);
-			opacity: 0.8;
-		}
-		66% {
-			transform: translate(-50%, calc(-50% + var(--center-offset, 0px))) scale(0.8);
-			opacity: 0;
+			transform: translate(-50%, calc(-50% + var(--center-offset, 0px))) scale(0.6);
+			opacity: 1;
 		}
 		100% {
-			transform: translate(-50%, calc(-50% + var(--center-offset, 0px))) scale(0.8);
+		    transform: translate(-50%, calc(-50% + var(--center-offset, 0px))) scale(0.6);
 			opacity: 0;
+			visibility: hidden;
 		}
 	}
 
@@ -157,16 +153,13 @@
 			opacity: 1;
 		}
 		33% {
-			transform: translate(-50%, -50%) scale(0.8);
-			opacity: 0.8;
-		}
-		66% {
-			transform: translate(-50%, -50%) scale(0.8);
-			opacity: 0;
+			transform: translate(-50%, -50%) scale(0.6);
+			opacity: 1;
 		}
 		100% {
-			transform: translate(-50%, -50%) scale(0.8);
+		    transform: translate(-50%, -50%) scale(0.6);
 			opacity: 0;
+			visibility: hidden;
 		}
 	}
 
@@ -176,16 +169,13 @@
 			opacity: 1;
 		}
 		33% {
-			transform: translate(-50%, calc(-50% + var(--center-offset, 0px))) scale(0.8);
-			opacity: 0.8;
-		}
-		66% {
-			transform: translate(-50%, calc(-50% + var(--center-offset, 0px))) scale(0.8);
-			opacity: 0;
+			transform: translate(-50%, calc(-50% + var(--center-offset, 0px))) scale(0.6);
+			opacity: 1;
 		}
 		100% {
-			transform: translate(-50%, calc(-50% + var(--center-offset, 0px))) scale(0.8);
+			transform: translate(-50%, calc(-50% + var(--center-offset, 0px))) scale(0.6);
 			opacity: 0;
+			visibility: hidden;
 		}
 	}
 

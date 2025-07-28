@@ -558,7 +558,7 @@
 					position="top"
 				/>
 			</div>
-			<h2 class="plus-symbol">+</h2>
+			<h2 class="plus-symbol" class:hidden-during-cart={isAddingToCart}>+</h2>
 			<div>
 				<FoodGroupComponent
 					foodItem={items.carb}
@@ -569,7 +569,7 @@
 					position="center"
 				/>
 			</div>
-			<h2 class="plus-symbol">+</h2>
+			<h2 class="plus-symbol" class:hidden-during-cart={isAddingToCart}>+</h2>
 			<div>
 				<FoodGroupComponent
 					foodItem={items.veggie}
@@ -830,14 +830,6 @@
 			transform: scale(0);
 		}
 		33% {
-			opacity: 0;
-			transform: scale(0);
-		}
-		50% {
-			opacity: 1;
-			transform: scale(1.2);
-		}
-		66% {
 			opacity: 1;
 			transform: scale(1.2);
 		}
@@ -845,5 +837,10 @@
 			opacity: 0;
 			transform: scale(1.2);
 		}
+	}
+
+	.plus-symbol.hidden-during-cart {
+		opacity: 0;
+		transition: opacity 0.2s ease-out;
 	}
 </style>

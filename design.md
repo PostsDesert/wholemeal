@@ -68,12 +68,13 @@ Spinner View
 - Clicking the swipe button should dismiss the message after adding the combo.
 - Buttons should higher off the floor on iOS PWA (is there a safe area that we can use for the bottom of the screen?)
 - Experiment with different fonts.
+- Add simple animation when adding to cart
+    - I'm thinking that the text disappears, the emojis all move the center and a cart emoji fades in over the top as the emojis shrink. Then the cart fades out. This should be ~1 second.
 
 ### Todo (before internal release)
 
 Spinner View:
-- Add simple animation when adding to cart
-    - I'm thinking that the text disappears, the emojis all move the center and a cart emoji fades in over the top as the emojis shrink. Then the cart fades out. This should be ~1 second.
+
 
 Lists View:
 
