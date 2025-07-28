@@ -410,25 +410,18 @@
 				<div class="receipt">
 					<div class="receipt-header">
 						<h2>WHOLEMEAL</h2>
-						<p class="receipt-subtitle">
-							<span class="emoji-large"></span> <span class="highlighted-list {currentList === 'protein' ? 'protein-highlight' : currentList === 'carb' ? 'carb-highlight' : 'veggie-highlight'}">{currentList === 'protein' ? 'PROTEIN' : currentList === 'carb' ? 'CARBS' : 'VEGGIES'}</span>
-						</p>
-						<p class="date">{new Date().toLocaleDateString()}</p>
+						<div class="mobile-nav">
+							{#each ['protein', 'carb', 'veggie'] as listType}
+								<button
+									class="nav-button"
+									class:active={currentList === listType}
+									onclick={() => switchList(listType as FoodGroupLabel)}
+								>
+								    <span class="emoji-large"></span> <span class="highlighted-list {currentList === listType ? (listType === 'protein' ? 'protein-highlight' : listType === 'carb' ? 'carb-highlight' : 'veggie-highlight') : ''}">{listType === 'protein' ? 'PROTEIN' : listType === 'carb' ? 'CARBS' : 'VEGGIES'}</span>
+								</button>
+							{/each}
+						</div>
 					</div>
-
-					<!-- Mobile navigation with underlined text -->
-					<div class="mobile-nav">
-						{#each ['protein', 'carb', 'veggie'] as listType}
-							<button
-								class="nav-button"
-								class:active={currentList === listType}
-								onclick={() => switchList(listType as FoodGroupLabel)}
-							>
-								{listType === 'protein' ? 'PROTEIN' : listType === 'carb' ? 'CARBS' : 'VEGGIES'}
-							</button>
-						{/each}
-					</div>
-
 					<div class="receipt-divider">**********************************</div>
 
 					{#if foodItems[currentList].length === 0}
@@ -803,8 +796,8 @@
 		background: none;
 		border: none;
 		font-family: inherit;
-		font-size: 0.9rem;
 		font-weight: bold;
+		font-size:1.6rem;
 		text-transform: uppercase;
 		color: #666;
 		cursor: pointer;
@@ -1193,11 +1186,6 @@
 		.mobile-nav {
 			flex-direction: row;
 			justify-content: space-around;
-		}
-
-		.nav-button {
-			font-size: 0.8rem;
-			padding: 0.75rem 0;
 		}
 
 		.form-actions {
