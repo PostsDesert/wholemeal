@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { FOOD_ITEMS } from '$lib/food-data';
-	import { getEmojiColor } from '$lib/utils';
+
 	import { goto } from '$app/navigation';
 	import { ROTATION_INTERVAL, CLICK_PREVENTION_DELAY, ROTATION_START_DELAY } from '$lib/constants';
 	import { browser } from '$app/environment';
 	import type { FoodGroup, FoodGroupLabel, FoodItem } from '$lib/types';
 	import { shuffleArray } from '$lib/utils';
 	import { onMount, onDestroy } from 'svelte';
-	import { fade, fly } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 	import { tick } from 'svelte';
 	import FoodGroupComponent from '../../components/FoodGroupComponent.svelte';
 	import AuthModal from '../../components/AuthModal.svelte';
@@ -115,10 +115,13 @@
 
 	// Animation states
 	let hasAddedCombos = $state(false);
-	let showComboCount = $state(false);
+
 	let comboCount = $state(0);
 	let comboMessageDismissed = $state(false);
 	let spinJustStarted = false;
+
+	// Cart animation state
+	let isAddingToCart = $state(false);
 
 	function createFoodGroup(label: FoodGroupLabel, emoji: string, items: FoodItem[]): FoodGroup {
 		return {
@@ -148,7 +151,7 @@
 	}
 
 	// Toggle rotation
-	function toggleRotation(event: Event | any) {
+	function toggleRotation() {
 		if (
 			preventClick ||
 			!shouldHandleInteraction() ||
@@ -158,7 +161,11 @@
 		}
 
 		// Skip slide transitions and directly toggle rotation
-		allRotating ? stopRotation() : startRotation();
+		if (allRotating) {
+			stopRotation();
+		} else {
+			startRotation();
+		}
 	}
 
 	// Handle keyboard navigation
@@ -192,7 +199,7 @@
 			try {
 				const data = JSON.parse(storedData);
 				comboCount = data.combos?.length || 0;
-				showComboCount = comboCount > 0;
+
 				hasAddedCombos = comboCount > 0;
 			} catch (e) {
 				console.error('Error loading combo count from storage:', e);
@@ -416,6 +423,14 @@
 
 	function addCombo(event: MouseEvent | null) {
 		if (!shouldHandleInteraction() || !firstRotationComplete) return;
+
+		// Start cart animation
+		isAddingToCart = true;
+
+		// Reset animation after 1 second
+		setTimeout(() => {
+			isAddingToCart = false;
+		}, 1000);
 		// Only dissmiss the message here if it was a click
 		// Otherwise, we'll dismiss on keyboard up.
 		if (event && event.detail >= 1) {
@@ -475,7 +490,7 @@
 			} else {
 				// Still update the combo count in case it wasn't set yet
 				comboCount = data.combos.length;
-				showComboCount = comboCount > 0;
+
 			}
 		} catch (e) {
 			console.error('Error saving combo:', e);
@@ -510,7 +525,7 @@
 				}
 				// Update combo count if needed
 				comboCount = data.combos?.length || 0;
-				showComboCount = comboCount > 0;
+
 				hasAddedCombos = comboCount > 0;
 			} catch (e) {
 				console.error('Error refreshing data:', e);
@@ -539,6 +554,8 @@
 					{hasStarted}
 					onStart={startIndividualRotation}
 					onStop={stopIndividualRotation}
+					{isAddingToCart}
+					position="top"
 				/>
 			</div>
 			<h2 class="plus-symbol">+</h2>
@@ -548,6 +565,8 @@
 					{hasStarted}
 					onStart={startIndividualRotation}
 					onStop={stopIndividualRotation}
+					{isAddingToCart}
+					position="center"
 				/>
 			</div>
 			<h2 class="plus-symbol">+</h2>
@@ -557,9 +576,18 @@
 					{hasStarted}
 					onStart={startIndividualRotation}
 					onStop={stopIndividualRotation}
+					{isAddingToCart}
+					position="bottom"
 				/>
 			</div>
 		</div>
+
+		<!-- Cart animation overlay -->
+		{#if isAddingToCart}
+			<div class="cart-overlay">
+				<span class="cart-emoji">🛒</span>
+			</div>
+		{/if}
 		<!-- Navigation hints -->
 		{#if !allRotating && hasStarted && !comboMessageDismissed}
 			<div class="create-combo-container">
@@ -780,72 +808,42 @@
 		}
 	}
 
-	/* @keyframes slideIn {
-		from {
-			transform: translateX(100vw);
-			opacity: 0;
-		}
-		to {
-			transform: translateX(0);
-			opacity: 1;
-		}
+
+	/* Cart animation styles */
+	.cart-overlay {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		z-index: 1000;
+		pointer-events: none;
 	}
 
-	@keyframes slideOut {
-		from {
-			transform: translateX(0);
-			opacity: 1;
-		}
-		to {
-			transform: translateX(100vw);
-			opacity: 0;
-		}
+	.cart-emoji {
+		font-size: 6rem;
+		animation: cartAnimation 1s ease-in-out;
 	}
 
-	@keyframes slideUp {
-		from {
-			transform: translateY(100vh);
+	@keyframes cartAnimation {
+		0% {
 			opacity: 0;
+			transform: scale(0);
 		}
-		to {
-			transform: translateY(0);
+		33% {
+			opacity: 0;
+			transform: scale(0);
+		}
+		50% {
 			opacity: 1;
+			transform: scale(1.2);
 		}
-	} */
-
-	/* :global(html) {
-		cursor: pointer;
-		-webkit-user-select: none;
-		user-select: none;
-		overflow: hidden;
-		overscroll-behavior: none;
-		touch-action: none;
-	}
-
-	:global(body) {
-		margin: 0;
-		padding: 0;
-		overflow: hidden;
-		&::-webkit-scrollbar {
-			display: none;
+		66% {
+			opacity: 1;
+			transform: scale(1.2);
 		}
-		scrollbar-width: none;
-	} */
-
-	/* .food-group-container {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		width: 100vw;
-		height: 100dvh;
-		margin-left: auto;
-		margin-right: auto;
-		padding: 0 1rem;
-	} */
-
-	.plus-symbol {
-		font-size: min(3rem, 8vw);
-		margin-bottom: 0;
+		100% {
+			opacity: 0;
+			transform: scale(1.2);
+		}
 	}
 </style>

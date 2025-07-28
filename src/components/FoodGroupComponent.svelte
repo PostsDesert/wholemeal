@@ -9,7 +9,9 @@
 		onStart,
 		onStop,
 		showTextDuringFalling = true,
-		isCurrentlyFalling = false
+		isCurrentlyFalling = false,
+		isAddingToCart = false,
+		position = "center"
 	}: {
 		foodItem: FoodGroup;
 		hasStarted: boolean;
@@ -17,6 +19,8 @@
 		onStop: (item: FoodGroup, event?: Event) => void;
 		showTextDuringFalling?: boolean;
 		isCurrentlyFalling?: boolean;
+		isAddingToCart?: boolean;
+		position?: "top" | "center" | "bottom";
 	} = $props();
 </script>
 
@@ -32,7 +36,7 @@
 	ontouchstart={() => onStart(foodItem)}
 	ontouchend={(e) => onStop(foodItem, e)}
 >
-	<FoodText foodItem={foodItem.item} {hasStarted} isRotating={foodItem.rotating} showText={showTextDuringFalling} {isCurrentlyFalling} />
+	<FoodText foodItem={foodItem.item} {hasStarted} isRotating={foodItem.rotating} showText={showTextDuringFalling} {isCurrentlyFalling} {isAddingToCart} {position} />
 </button>
 
 <style>
