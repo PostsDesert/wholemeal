@@ -501,7 +501,7 @@
 							placeholder="Enter item name"
 							autocomplete="off"
 							required
-							autofocus
+
 						/>
 						<small class="helper-text">Name must be unique within this category</small>
 					</div>

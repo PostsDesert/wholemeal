@@ -24,7 +24,7 @@
 	} = $props();
 
 	let emojiColor = $derived(getEmojiColor(foodItem.emoji));
-	let emojiElement: HTMLElement;
+	let emojiElement: HTMLElement | undefined = $state();
 	let centerOffset = $state(0);
 
 	// Calculate offset to center position when component mounts

@@ -8,6 +8,8 @@
 	export let pixelation: number = 20; // The intermediate resolution. Higher = more detail.
 	export let color: string | undefined = undefined; // Optional: override color for all "on" pixels (e.g. "#4caf50")
 
+	type RenderMode = 'monochrome' | 'grayscale' | 'color';
+
 	let canvas: HTMLCanvasElement;
 
 	// This function performs the rendering and dithering
@@ -21,7 +23,7 @@
 		// 'monochrome': Authentic single-color receipt look.
 		// 'grayscale':  Dithered black-and-white version of the emoji.
 		// 'color':      Dithered, pixelated version with original colors.
-		const RENDER_MODE: 'monochrome' | 'grayscale' | 'color' = 'color';
+		const RENDER_MODE: RenderMode = 'color';
 
 		// --- Step 1: Prepare Canvases ---
 		canvas.width = size;
@@ -74,14 +76,14 @@
 
 				if (intensity > threshold) {
 					// This pixel is "on". Apply the selected render mode.
-					switch (RENDER_MODE) {
+					switch (RENDER_MODE as RenderMode) {
 						case 'monochrome':
 							data[index] = inkColor;
 							data[index + 1] = inkColor;
 							data[index + 2] = inkColor;
 							break;
 
-						case 'grayscale':
+						case 'grayscale': {
 							// Calculate luminance for an accurate grayscale value
 							const r = data[index];
 							const g = data[index + 1];
@@ -91,6 +93,7 @@
 							data[index + 1] = gray;
 							data[index + 2] = gray;
 							break;
+						}
 
 						case 'color':
 							if (overrideRgb) {
@@ -122,7 +125,7 @@
 	}
 </script>
 
-<canvas bind:this={canvas} aria-label={emoji} role="img"></canvas>
+<canvas bind:this={canvas} aria-label={emoji}></canvas>
 
 <style>
 	canvas {

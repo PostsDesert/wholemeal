@@ -68,9 +68,9 @@
 	let hasStarted = $state(false);
 
 	let items = $state({
-		protein: createFoodGroup('protein', '🐔', currentFoodItemsSource.protein),
-		carb: createFoodGroup('carb', '🍠', currentFoodItemsSource.carb),
-		veggie: createFoodGroup('veggie', '🥦', currentFoodItemsSource.veggie)
+		protein: createFoodGroup('protein', '🐔', []),
+		carb: createFoodGroup('carb', '🍠', []),
+		veggie: createFoodGroup('veggie', '🥦', [])
 	});
 
 	$effect(() => {
@@ -194,14 +194,6 @@
 		}
 	}
 
-	function resetNavigationState() {
-		if (typeof window !== 'undefined') {
-			localStorage.removeItem('spinner-nav-visible');
-			firstRotationComplete = false;
-			firstRotationStarted = false;
-		}
-	}
-
 	onMount(() => {
 		// Ensure this code only runs in the browser
 		if (browser) {
@@ -239,7 +231,7 @@
 	function handleKeyUp(e: KeyboardEvent) {
 		if (!shouldHandleInteraction()) return;
 		if (e.key === ' ' || e.code === 'Space') {
-			toggleRotation(e);
+			toggleRotation();
 		}
 		if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === 's' || e.key === 'j') {
 			comboMessageDismissed = true;
@@ -260,7 +252,7 @@
 		if (e.key === '3') startIndividualRotation(items.veggie, 0);
 	}
 
-	function maybeFade(node: Element, params: any) {
+	function maybeFade(node: Element, params: { duration?: number; delay?: number; easing?: (t: number) => number }) {
 		let transition = fade(node, params);
 
 		// If there are children, apply the transition to each child as well
@@ -451,7 +443,7 @@
 
 			// Check for duplicates before adding
 			const isDuplicate = data.combos.some(
-				(combo: any) =>
+				(combo: { protein: FoodItem; carb: FoodItem; veggie: FoodItem }) =>
 					combo.protein.text === protein.text &&
 					combo.carb.text === carb.text &&
 					combo.veggie.text === veggie.text

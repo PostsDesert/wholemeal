@@ -17,7 +17,7 @@ export function getEmojiColor(emojiString: string) {
         totalB = 0,
         totalCount = 0;
 
-    emojis.forEach((emoji, index) => {
+    emojis.forEach((emoji) => {
         ctx.clearRect(0, 0, 48, 48);
         ctx.fillText(emoji, 0, 40);
 
@@ -62,7 +62,7 @@ export function getEmojiColor(emojiString: string) {
     return `rgb(${r}, ${g}, ${b})`;
 }
 
-export function shuffleArray(array: any[]) {
+export function shuffleArray<T>(array: T[]) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1)); // Random index between 0 and i
         [array[i], array[j]] = [array[j], array[i]]; // Swap elements

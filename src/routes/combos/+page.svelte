@@ -3,7 +3,6 @@
 	import { goto } from '$app/navigation';
 	import { fade, fly } from 'svelte/transition';
 	import type { FoodItem } from '$lib/types';
-	import { browser } from '$app/environment';
 	import DeleteModal from '../../components/DeleteModal.svelte';
 	import { SwipeNavigationHandler } from '$lib/swipe-navigation';
 
