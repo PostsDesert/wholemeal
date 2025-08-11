@@ -84,12 +84,14 @@ General:
     - Font should be bigger on mobile devices
 - Refactor out button component (option for color)
 - Make it easier to tell that swipe navigation gestures are available on mobile devices.
+- Keyboard shortcuts should be explained on desktop devices.
 - Add socials on bottom of receipts (Github, LinkedIn, BlueSky?)
 - Caching emoji generation to speed up page loads/reduce redundent work.
 - Slim down binary size.
 - Remove unused code.
     - This include the auth code
-- Update readme with features, and usage instructions.
+- Update ReadMe with features, and usage instructions.
+- Shopping cart emoji shouldn't play on start screen (via keyboard/swipe action)
 
 
 

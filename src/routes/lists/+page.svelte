@@ -5,15 +5,11 @@
 	import { FOOD_ITEMS } from '$lib/food-data';
 	import { browser } from '$app/environment';
 	import type { FoodGroupLabel, FoodItem } from '$lib/types';
-	import AuthModal from '../../components/AuthModal.svelte';
 	import DeleteModal from '../../components/DeleteModal.svelte';
 	import BackButton from '../../components/BackButton.svelte';
 	import { SwipeNavigationHandler } from '$lib/swipe-navigation';
 	import ReceiptEmoji from '../../components/ReceiptEmoji.svelte';
 
-	// Auth state
-	let isAuthenticated = $state(true);
-	let showAuthModal = $state(false);
 	let showResetModal = $state(false);
 	let showDeleteModal = $state(false);
 	let itemToDelete: { group: FoodGroupLabel; index: number; item: FoodItem } | null = $state(null);
@@ -48,7 +44,7 @@
 		}
 	}
 
-	// Load food items and auth state from local storage
+	// Load food items state from local storage
 	function loadFromLocalStorage() {
 		if (browser) {
 			const storedData = localStorage.getItem('mealPlanner') || '{}';
@@ -67,8 +63,6 @@
 					foodItems.veggie = [...FOOD_ITEMS.veggie];
 				}
 
-				// Load auth state
-				// isAuthenticated = data.auth?.isLoggedIn || false;
 			} catch (e) {
 				console.error('Error loading from local storage:', e);
 				// Fallback to default items on error
@@ -226,13 +220,12 @@
 
 	// Check if interactions should be handled
 	function shouldHandleInteraction() {
-		// Don't handle interactions if auth modal is open, adding an item, editing an item, or delete modal is open
-		return !showAuthModal && !isAddingItem && editingItemIndex === null && !showDeleteModal;
+		// Don't handle interactions if adding an item, editing an item, or delete modal is open
+		return !isAddingItem && editingItemIndex === null && !showDeleteModal;
 	}
 
 	// Handle keyboard shortcuts
 	function handleKeydown(event: KeyboardEvent) {
-		// Don't process keyboard shortcuts if auth modal is open
 		if (!shouldHandleInteraction() && event.key !== 'Escape') return;
 
 		// Handle navigation keys
@@ -247,9 +240,6 @@
 				editingItemIndex = null;
 				newItemText = '';
 				newItemEmoji = '';
-			} else if (!showAuthModal) {
-				// Return to spinner only if auth modal is not open
-				goto('/spinner');
 			}
 		}
 	}
@@ -277,7 +267,7 @@
 		swipeHandler = new SwipeNavigationHandler({
 			currentPage: '/lists',
 			options: {
-				shouldDisableSwipe: () => showAuthModal || showResetModal || showDeleteModal || isAddingItem
+				shouldDisableSwipe: () => showResetModal || showDeleteModal || isAddingItem
 			}
 		});
 
@@ -336,9 +326,6 @@
 							{#if foodItems[group as FoodGroupLabel].length === 0}
 								<div class="empty-state" in:fade>
 									<p>NO ITEMS</p>
-									{#if isAuthenticated}
-										<p>ADD ITEMS BELOW</p>
-									{/if}
 								</div>
 							{:else}
 								<div class="receipt-items">
@@ -348,7 +335,6 @@
 												<ReceiptEmoji emoji={item.emoji} size={20} />
 											</div>
 											<span class="item-text">{item.text}</span>
-											{#if isAuthenticated}
 												<div class="item-actions">
 													<button
 														class="edit-button"
@@ -365,7 +351,6 @@
 														(x)
 													</button>
 												</div>
-											{/if}
 										</div>
 									{/each}
 								</div>
@@ -373,7 +358,6 @@
 
 							<div class="receipt-divider">**********************************</div>
 							<div class="receipt-footer">
-								{#if isAuthenticated}
 									<button
 										class="action-button"
 										onclick={() => {
@@ -386,7 +370,6 @@
 									>
 										ADD ITEM
 									</button>
-								{/if}
 								<button
 									class="action-button reset-button"
 									onclick={(e) => {
@@ -425,9 +408,6 @@
 					{#if foodItems[currentList].length === 0}
 						<div class="empty-state" in:fade>
 							<p>NO ITEMS</p>
-							{#if isAuthenticated}
-								<p>ADD ITEMS BELOW</p>
-							{/if}
 						</div>
 					{:else}
 						<div class="receipt-items">
@@ -437,7 +417,6 @@
 										<ReceiptEmoji emoji={item.emoji} size={20} />
 									</div>
 									<span class="item-text">{item.text}</span>
-									{#if isAuthenticated}
 										<div class="item-actions">
 											<button
 												class="edit-button"
@@ -454,7 +433,6 @@
 												(x)
 											</button>
 										</div>
-									{/if}
 								</div>
 							{/each}
 						</div>
@@ -462,7 +440,6 @@
 
 					<div class="receipt-divider">**********************************</div>
 					<div class="receipt-footer">
-						{#if isAuthenticated}
 							<button
 								class="action-button"
 								onclick={() => {
@@ -474,7 +451,6 @@
 							>
 								ADD ITEM
 							</button>
-						{/if}
 						<button
 							class="action-button reset-button"
 							onclick={(e) => {
@@ -620,38 +596,6 @@
 		on:cancel={cancelDeleteItem}
 	/>
 
-	<!-- Auth modal with event binding -->
-	<AuthModal
-		isOpen={showAuthModal}
-		on:close={() => {
-			console.log('Auth modal close event received');
-			showAuthModal = false;
-		}}
-		on:dataChange={() => {
-			console.log('Auth modal data change event received');
-			// Refresh data or UI as needed
-			if (browser) {
-				// const storedData = localStorage.getItem('mealPlanner') || '{}';
-				try {
-					// const data = JSON.parse(storedData);
-					const wasAuthenticated = isAuthenticated;
-					isAuthenticated = true; // data.auth?.isLoggedIn || false;
-
-					// If user just signed in, enable edit mode for the current list
-					if (!wasAuthenticated && isAuthenticated) {
-						console.log('User signed in, enabling edit mode');
-						// If on desktop, keep current view
-						// If on mobile, make sure we're in a valid view for editing
-						if (!isDesktop) {
-							currentList = currentList || 'protein';
-						}
-					}
-				} catch (e) {
-					console.error('Error refreshing data:', e);
-				}
-			}
-		}}
-	/>
 </main>
 
 <style>

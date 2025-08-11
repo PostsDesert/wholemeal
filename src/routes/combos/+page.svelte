@@ -1,15 +1,12 @@
 <script lang="ts">
-	// ... (The entire <script> block remains exactly the same as before)
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { fade, fly } from 'svelte/transition';
 	import type { FoodItem } from '$lib/types';
 	import { browser } from '$app/environment';
-	import AuthModal from '../../components/AuthModal.svelte';
 	import DeleteModal from '../../components/DeleteModal.svelte';
 	import { SwipeNavigationHandler } from '$lib/swipe-navigation';
 
-	// --- NEW: IMPORT THE CANVAS EMOJI COMPONENT ---
 	import ReceiptEmoji from '../../components/ReceiptEmoji.svelte';
 	import BackButton from '../../components/BackButton.svelte';
 
@@ -26,14 +23,8 @@
 	let copySuccess: boolean = $state(false);
 	let emailSuccess: boolean = $state(false);
 
-	// Auth modal
-	let showAuthModal = $state(false);
-
 	// Delete modal
 	let showDeleteModal = $state(false);
-
-	// Auth state
-	let isAuthenticated = $state(false);
 
 	// Swipe navigation handler
 	let swipeHandler: SwipeNavigationHandler;
@@ -42,22 +33,12 @@
 	onMount(() => {
 		loadCombos();
 
-		// Load auth state
-		if (browser) {
-			const storedData = localStorage.getItem('mealPlanner') || '{}';
-			try {
-				const data = JSON.parse(storedData);
-				isAuthenticated = data.auth?.isLoggedIn || false;
-			} catch (e) {
-				console.error('Error loading auth state:', e);
-			}
-		}
 
 		// Initialize swipe handler
 		swipeHandler = new SwipeNavigationHandler({
 			currentPage: '/combos',
 			options: {
-				shouldDisableSwipe: () => showAuthModal || showDeleteModal
+				shouldDisableSwipe: () => showDeleteModal
 			}
 		});
 
@@ -182,8 +163,8 @@
 
 	// Check if interactions should be handled
 	function shouldHandleInteraction() {
-		// Don't handle interactions if auth modal or delete modal is open
-		return !showAuthModal && !showDeleteModal;
+		// Don't handle interactions if delete modal is open
+		return !showDeleteModal;
 	}
 
 	// Handle keyboard shortcuts
@@ -206,7 +187,7 @@
 			event.preventDefault();
 			goto('/spinner');
 		} else if (event.key === 'Escape') {
-			if (!showAuthModal && !showDeleteModal) {
+			if (!showDeleteModal) {
 				// Return to spinner only if no modals are open
 				event.preventDefault();
 				goto('/spinner');
@@ -222,10 +203,6 @@
 		};
 	});
 
-	// Toggle auth modal
-	function toggleAuthModal() {
-		showAuthModal = !showAuthModal;
-	}
 </script>
 
 <svelte:head>
@@ -233,15 +210,6 @@
 	<meta name="theme-color" content="#f5f5f5" />
 	<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#f5f5f5" />
 </svelte:head>
-
-<!-- Auth modal -->
-<AuthModal
-	isOpen={showAuthModal}
-	on:close={() => (showAuthModal = false)}
-	on:dataChange={() => {
-		/* ... */
-	}}
-/>
 
 <main>
 	<div class="page-header">

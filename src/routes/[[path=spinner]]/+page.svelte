@@ -10,13 +10,9 @@
 	import { fade } from 'svelte/transition';
 	import { tick } from 'svelte';
 	import FoodGroupComponent from '../../components/FoodGroupComponent.svelte';
-	import AuthModal from '../../components/AuthModal.svelte';
 	import { SwipeNavigationHandler } from '$lib/swipe-navigation';
 
 	const MEAL_PLANNER_KEY = 'mealPlanner';
-
-	// Auth state - must be declared before it's used in $derived
-	let isAuthenticated = $state(false);
 
 	// Desktop detection for responsive design
 	let isDesktop = $state(false);
@@ -31,15 +27,15 @@
 		}
 	}
 
-	// Function to get food items based on auth state
-	function getFoodItemsSource(authStatus: boolean) {
+	// Function to get food items
+	function getFoodItemsSource() {
 		if (browser) {
 			const storedData = localStorage.getItem(MEAL_PLANNER_KEY) || '{}';
 			try {
 				const data = JSON.parse(storedData);
 
-				// Load food items if present and user is authenticated
-				if (authStatus && data.foodItems) {
+				// Load food items if present
+				if (data.foodItems) {
 					const customItems = data.foodItems;
 					if (customItems && customItems.protein && customItems.carb && customItems.veggie) {
 						// Ensure all food groups have at least one item to prevent errors
@@ -59,8 +55,6 @@
 					}
 				}
 
-				// Load auth state
-				isAuthenticated = data.auth?.isLoggedIn || false;
 			} catch (e) {
 				console.error('Error parsing meal planner data from localStorage:', e);
 			}
@@ -68,7 +62,7 @@
 		return FOOD_ITEMS;
 	}
 
-	let currentFoodItemsSource = $derived(getFoodItemsSource(isAuthenticated));
+	let currentFoodItemsSource = $derived(getFoodItemsSource());
 
 	// Add a state to track if first click has happened
 	let hasStarted = $state(false);
@@ -110,8 +104,6 @@
 	let allRotating = $state(false);
 	let intervalId: number | undefined = undefined; // Store interval ID
 
-	// Auth modal
-	let showAuthModal = $state(false);
 
 	// Animation states
 	let hasAddedCombos = $state(false);
@@ -146,8 +138,8 @@
 
 	// Check if interactions should be handled
 	function shouldHandleInteraction() {
-		// Don't handle interactions if auth modal is open
-		return !showAuthModal;
+		// Always return true for now on the spinner page
+		return true;
 	}
 
 	// Toggle rotation
@@ -187,11 +179,6 @@
 		}
 	}
 
-	// Toggle auth modal
-	function toggleAuthModal() {
-		showAuthModal = !showAuthModal;
-	}
-
 	// Reset navigation visibility state (for testing purposes)
 	function updateComboCountFromStorage() {
 		if (browser) {
@@ -227,16 +214,13 @@
 			checkIfDesktop();
 			window.addEventListener('resize', checkIfDesktop);
 
-			// Load auth state
 			const storedData = localStorage.getItem(MEAL_PLANNER_KEY) || '{}';
 			try {
 				const data = JSON.parse(storedData);
-				// Set isAuthenticated which will trigger the $derived currentFoodItemsSource
-				isAuthenticated = data.auth?.isLoggedIn || false;
 				// Check if there are any saved combos
 				hasAddedCombos = data.combos?.length > 0 || localStorage.getItem('comboAdded') === 'true';
 			} catch (e) {
-				console.error('Error loading auth state:', e);
+				console.error('Error loading local storage:', e);
 			}
 		}
 		visible = true;
@@ -399,7 +383,7 @@
 		swipeHandler = new SwipeNavigationHandler({
 			currentPage: '/spinner',
 			options: {
-				shouldDisableSwipe: () => allRotating || showAuthModal,
+				shouldDisableSwipe: () => allRotating,
 				onSwipeDown: () => {
 					// Custom swipe down behavior for spinner - create combo
 					if (shouldHandleInteraction() && firstRotationComplete) {
@@ -504,49 +488,8 @@
 	<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#ffffff" />
 </svelte:head>
 
-<!-- Auth modal with event binding -->
-<AuthModal
-	isOpen={showAuthModal}
-	on:close={() => {
-		console.log('Auth modal close event received');
-		showAuthModal = false;
-	}}
-	on:dataChange={() => {
-		console.log('Auth modal data change event received');
-		// Refresh data or UI as needed
-		if (browser) {
-			const storedData = localStorage.getItem(MEAL_PLANNER_KEY) || '{}';
-			try {
-				const data = JSON.parse(storedData);
-				const newAuthStatus = data.auth?.isLoggedIn || false;
-				// Only update isAuthenticated. $derived will handle currentFoodItemsSource.
-				if (isAuthenticated !== newAuthStatus) {
-					isAuthenticated = newAuthStatus;
-				}
-				// Update combo count if needed
-				comboCount = data.combos?.length || 0;
-
-				hasAddedCombos = comboCount > 0;
-			} catch (e) {
-				console.error('Error refreshing data:', e);
-			}
-		}
-	}}
-/>
-
 {#if visible}
 	<main in:maybeFade={{ duration: 50 }}>
-		<!-- Auth button -->
-		<!-- <button
-			class="auth-button"
-			class:authenticated={isAuthenticated}
-			onclick={(e) => {
-				e.stopPropagation();
-				toggleAuthModal();
-			}}
-		>
-			👤
-		</button> -->
 		<div class="food-group-container pico">
 			<div>
 				<FoodGroupComponent
@@ -657,29 +600,6 @@
 		user-select: none;
 		overscroll-behavior: none;
 		-webkit-overflow-scrolling: touch;
-	}
-
-	.auth-button {
-		position: fixed;
-		top: 1rem;
-		right: 1rem;
-		background: none;
-		border: none;
-		font-size: 1.5rem;
-		cursor: pointer;
-		padding: 0.5rem;
-		opacity: 0.7;
-		z-index: 10;
-		transition: all 0.2s ease;
-	}
-
-	.auth-button:hover {
-		transform: scale(1.1);
-	}
-
-	.auth-button.authenticated {
-		opacity: 1;
-		color: #2196f3;
 	}
 
 	/* Navigation hints */
