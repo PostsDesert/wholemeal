@@ -398,7 +398,8 @@
 	});
 
 	function addCombo(event: MouseEvent | null) {
-		if (!shouldHandleInteraction() || !firstRotationComplete) return;
+		if (!shouldHandleInteraction() || !hasStarted) return;
+		console.log('First rotation complete:', firstRotationComplete);
 
 		// Start cart animation
 		isAddingToCart = true;
@@ -575,14 +576,6 @@
 		{/if}
 	</main>
 {/if}
-
-<!-- hasStarted && !Object.values(items).some(item => item.rotating) -->
-
-<!-- {#if !visible}
-	<main class="pico">
-		<h1 class="intro">Loading...</h1>
-	</main>
-{/if} -->
 
 <style>
 	main {

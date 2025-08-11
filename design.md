@@ -70,6 +70,7 @@ Spinner View
 - Experiment with different fonts.
 - Add simple animation when adding to cart
     - I'm thinking that the text disappears, the emojis all move the center and a cart emoji fades in over the top as the emojis shrink. Then the cart fades out. This should be ~1 second.
+- Shopping cart emoji shouldn't play on start screen (via keyboard/swipe action)
 
 ### Todo (before internal release)
 
@@ -81,17 +82,19 @@ Combo View:
 
 General:
 - Refactor out receipt component
-    - Font should be bigger on mobile devices
+  - Content of the receipt is not defined in the component, but rather passed in as a prop.
+  - Font should be bigger on mobile devices
 - Refactor out button component (option for color)
 - Make it easier to tell that swipe navigation gestures are available on mobile devices.
 - Keyboard shortcuts should be explained on desktop devices.
 - Add socials on bottom of receipts (Github, LinkedIn, BlueSky?)
 - Caching emoji generation to speed up page loads/reduce redundent work.
+- Cache emoji label colors to speed up page loads/reduce redundant work.
 - Slim down binary size.
-- Remove unused code.
-    - This include the auth code
+- Back button on lists page should be the same as the combo page.
+- refactor stuff out into components
+- minimize CSS usage by removing CSS that's shadowed and shared
 - Update ReadMe with features, and usage instructions.
-- Shopping cart emoji shouldn't play on start screen (via keyboard/swipe action)
 
 
 
