@@ -8,6 +8,7 @@
 
 	import ReceiptEmoji from '../../components/ReceiptEmoji.svelte';
 	import BackButton from '../../components/BackButton.svelte';
+	import Receipt from '../../components/Receipt.svelte';
 
 	// Combo interface for saved meal combinations
 	interface Combo {
@@ -216,88 +217,86 @@
 	</div>
 
 	<!-- Receipt styled list of combos -->
-	<div class="receipt-container">
-		<div class="receipt">
-			<div class="receipt-header">
-				<h2>WHOLEMEAL</h2>
-				<p>Your Saved Combinations</p>
-				<p class="date">{new Date().toLocaleString()}</p>
-			</div>
-			<div class="receipt-divider">**********************************</div>
+	<Receipt single>
+		<div class="receipt-header">
+			<h2>WHOLEMEAL</h2>
+			<p>Your Saved Combinations</p>
+			<p class="date">{new Date().toLocaleString()}</p>
+		</div>
+		<div class="receipt-divider">**********************************</div>
 
-			{#if combos.length === 0}
-				<div class="empty-state" in:fade>
-					<p>NO SAVED MEALS</p>
-					<p>ADD MEALS FROM THE SPINNER PAGE</p>
-				</div>
-			{:else}
-				<div class="receipt-items">
-					{#each combos as combo (combo.id)}
-						<div class="combo-group" in:fly={{ y: 20, duration: 300 }}>
-							<div class="combo-header">
-								<span class="item-date">Meal from: {formatDate(combo.date)}</span>
-								<button
-									class="delete-button"
-									onclick={() => deleteCombo(combo.id)}
-									aria-label="Delete combo"
-								>
-									(x)
-								</button>
-							</div>
-							<!-- --- CHANGE: USE THE RECEIPTEMOJI COMPONENT --- -->
-							<div class="item-line">
-								<span class="item-text">{combo.protein.text}</span>
-								<div class="item-emoji">
-									<ReceiptEmoji emoji={combo.protein.emoji} size={20} />
-								</div>
-							</div>
-							<div class="item-line">
-								<span class="item-text">{combo.carb.text}</span>
-								<div class="item-emoji">
-									<ReceiptEmoji emoji={combo.carb.emoji} size={20} />
-								</div>
-							</div>
-							<div class="item-line">
-								<span class="item-text">{combo.veggie.text}</span>
-								<div class="item-emoji">
-									<ReceiptEmoji emoji={combo.veggie.emoji} size={20} />
-								</div>
+		{#if combos.length === 0}
+			<div class="empty-state" in:fade>
+				<p>NO SAVED MEALS</p>
+				<p>ADD MEALS FROM THE SPINNER PAGE</p>
+			</div>
+		{:else}
+			<div class="receipt-items">
+				{#each combos as combo (combo.id)}
+					<div class="combo-group" in:fly={{ y: 20, duration: 300 }}>
+						<div class="combo-header">
+							<span class="item-date">Meal from: {formatDate(combo.date)}</span>
+							<button
+								class="delete-button"
+								onclick={() => deleteCombo(combo.id)}
+								aria-label="Delete combo"
+							>
+								(x)
+							</button>
+						</div>
+						<!-- --- CHANGE: USE THE RECEIPTEMOJI COMPONENT --- -->
+						<div class="item-line">
+							<span class="item-text">{combo.protein.text}</span>
+							<div class="item-emoji">
+								<ReceiptEmoji emoji={combo.protein.emoji} size={20} />
 							</div>
 						</div>
-						<div class="receipt-divider small">----------------------------------</div>
-					{/each}
-				</div>
-			{/if}
-
-			<div class="receipt-divider">**********************************</div>
-			<div class="receipt-footer">
-				<div class="action-buttons">
-					<button class="action-button" onclick={copyToClipboard}>
-						COPY LIST
-						{#if copySuccess}
-							<span class="success-message"
-								><ReceiptEmoji emoji="✓" size={24} pixelation={64} color="#4caf50" /></span
-							>
-						{/if}
-					</button>
-					<button class="action-button" onclick={sendEmail}>
-						SEND VIA EMAIL
-						{#if emailSuccess}
-							<span class="success-message"
-								><ReceiptEmoji emoji="✓" size={24} pixelation={64} color="#4caf50" /></span
-							>
-						{/if}
-					</button>
-					{#if combos.length > 0}
-						<button class="action-button clear-button" onclick={showClearConfirmation}>
-							CLEAR ALL MEALS
-						</button>
-					{/if}
-				</div>
-				<p class="receipt-note">Thank you for using WHOLEMEAL!</p>
+						<div class="item-line">
+							<span class="item-text">{combo.carb.text}</span>
+							<div class="item-emoji">
+								<ReceiptEmoji emoji={combo.carb.emoji} size={20} />
+							</div>
+						</div>
+						<div class="item-line">
+							<span class="item-text">{combo.veggie.text}</span>
+							<div class="item-emoji">
+								<ReceiptEmoji emoji={combo.veggie.emoji} size={20} />
+							</div>
+						</div>
+					</div>
+					<div class="receipt-divider small">----------------------------------</div>
+				{/each}
 			</div>
+		{/if}
+
+		<div class="receipt-divider">**********************************</div>
+		<div class="receipt-footer">
+			<div class="action-buttons">
+				<button class="action-button" onclick={copyToClipboard}>
+					COPY LIST
+					{#if copySuccess}
+						<span class="success-message"
+							><ReceiptEmoji emoji="✓" size={24} pixelation={64} color="#4caf50" /></span
+						>
+					{/if}
+				</button>
+				<button class="action-button" onclick={sendEmail}>
+					SEND VIA EMAIL
+					{#if emailSuccess}
+						<span class="success-message"
+							><ReceiptEmoji emoji="✓" size={24} pixelation={64} color="#4caf50" /></span
+						>
+					{/if}
+				</button>
+				{#if combos.length > 0}
+					<button class="action-button clear-button" onclick={showClearConfirmation}>
+						CLEAR ALL MEALS
+					</button>
+				{/if}
+			</div>
+			<p class="receipt-note">Thank you for using WHOLEMEAL!</p>
 		</div>
-	</div>
+	</Receipt>
 </main>
 
 <!-- Delete confirmation modal -->
@@ -330,29 +329,6 @@
 		max-width: 380px;
 		margin: 0 auto 1rem auto;
 		text-align: left;
-	}
-
-	.receipt-container {
-		max-width: 380px;
-		margin: 0 auto;
-		background: #fdfdfd;
-		padding: 1.5rem;
-		box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
-		position: relative;
-	}
-
-	.receipt-container::after {
-		content: '';
-		position: absolute;
-		bottom: -15px;
-		left: 0;
-		right: 0;
-		height: 30px;
-		background:
-			linear-gradient(135deg, transparent 75%, #e0e0e0 75%) 0 50%,
-			linear-gradient(45deg, transparent 75%, #e0e0e0 75%) 0 50%;
-		background-size: 30px 30px;
-		background-repeat: repeat-x;
 	}
 
 	.receipt-header {

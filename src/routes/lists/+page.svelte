@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Receipt from '../../components/Receipt.svelte';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { fade, slide } from 'svelte/transition';
@@ -314,135 +315,53 @@
 			<!-- Desktop: 3 receipts side by side -->
 			<div class="receipts-grid">
 				{#each ['protein', 'carb', 'veggie'] as group}
-					<div class="receipt-container">
-						<div class="receipt">
-							<div class="receipt-header">
-								<h2>WHOLEMEAL</h2>
-								<p class="receipt-subtitle">
-									<span class="highlighted-list {group === 'protein' ? 'protein-highlight' : group === 'carb' ? 'carb-highlight' : 'veggie-highlight'}">{group === 'protein' ? 'PROTEIN' : group === 'carb' ? 'CARBS' : 'VEGGIES'}</span>
-								</p>
+					<Receipt>
+						<div class="receipt-header">
+							<h2>WHOLEMEAL</h2>
+							<p class="receipt-subtitle">
+								<span class="highlighted-list {group === 'protein' ? 'protein-highlight' : group === 'carb' ? 'carb-highlight' : 'veggie-highlight'}">{group === 'protein' ? 'PROTEIN' : group === 'carb' ? 'CARBS' : 'VEGGIES'}</span>
+							</p>
+						</div>
+						<div class="receipt-divider">**********************************</div>
+						{#if foodItems[group as FoodGroupLabel].length === 0}
+							<div class="empty-state" in:fade>
+								<p>NO ITEMS</p>
 							</div>
-							<div class="receipt-divider">**********************************</div>
-							{#if foodItems[group as FoodGroupLabel].length === 0}
-								<div class="empty-state" in:fade>
-									<p>NO ITEMS</p>
-								</div>
-							{:else}
-								<div class="receipt-items">
-									{#each foodItems[group as FoodGroupLabel] as item, index}
-										<div class="item-line" in:fade={{ duration: 300 }}>
-											<div class="item-emoji">
-												<ReceiptEmoji emoji={item.emoji} size={20} />
-											</div>
-											<span class="item-text">{item.text}</span>
-												<div class="item-actions">
-													<button
-														class="edit-button"
-														onclick={() => editItem(group as FoodGroupLabel, index)}
-														title="Edit item"
-													>
-														(e)
-													</button>
-													<button
-														class="delete-button"
-														onclick={() => deleteItem(group as FoodGroupLabel, index)}
-														title="Delete item"
-													>
-														(x)
-													</button>
-												</div>
+						{:else}
+							<div class="receipt-items">
+								{#each foodItems[group as FoodGroupLabel] as item, index}
+									<div class="item-line" in:fade={{ duration: 300 }}>
+										<div class="item-emoji">
+											<ReceiptEmoji emoji={item.emoji} size={20} />
 										</div>
-									{/each}
-								</div>
-							{/if}
-
-							<div class="receipt-divider">**********************************</div>
-							<div class="receipt-footer">
-									<button
-										class="action-button"
-										onclick={() => {
-											currentList = group as FoodGroupLabel;
-											isAddingItem = true;
-											editingItemIndex = null;
-											newItemText = '';
-											newItemEmoji = '';
-										}}
-									>
-										ADD ITEM
-									</button>
-								<button
-									class="action-button reset-button"
-									onclick={(e) => {
-										e.stopPropagation();
-										toggleResetModal();
-									}}
-									title="Reset all lists"
-								>
-									RESET ALL
-								</button>
-							</div>
-						</div>
-					</div>
-				{/each}
-			</div>
-		{:else}
-			<!-- Mobile: single receipt with underlined navigation -->
-			<div class="receipt-container mobile">
-				<div class="receipt">
-					<div class="receipt-header">
-						<h2>WHOLEMEAL</h2>
-						<div class="mobile-nav">
-							{#each ['protein', 'carb', 'veggie'] as listType}
-								<button
-									class="nav-button"
-									class:active={currentList === listType}
-									onclick={() => switchList(listType as FoodGroupLabel)}
-								>
-								    <span class="emoji-large"></span> <span class="highlighted-list {currentList === listType ? (listType === 'protein' ? 'protein-highlight' : listType === 'carb' ? 'carb-highlight' : 'veggie-highlight') : ''}">{listType === 'protein' ? 'PROTEIN' : listType === 'carb' ? 'CARBS' : 'VEGGIES'}</span>
-								</button>
-							{/each}
-						</div>
-					</div>
-					<div class="receipt-divider">**********************************</div>
-
-					{#if foodItems[currentList].length === 0}
-						<div class="empty-state" in:fade>
-							<p>NO ITEMS</p>
-						</div>
-					{:else}
-						<div class="receipt-items">
-							{#each foodItems[currentList] as item, index}
-								<div class="item-line" in:fade={{ duration: 300 }}>
-									<div class="item-emoji">
-										<ReceiptEmoji emoji={item.emoji} size={20} />
-									</div>
-									<span class="item-text">{item.text}</span>
+										<span class="item-text">{item.text}</span>
 										<div class="item-actions">
 											<button
 												class="edit-button"
-												onclick={() => editItem(currentList, index)}
+												onclick={() => editItem(group as FoodGroupLabel, index)}
 												title="Edit item"
 											>
 												(e)
 											</button>
 											<button
 												class="delete-button"
-												onclick={() => deleteItem(currentList, index)}
+												onclick={() => deleteItem(group as FoodGroupLabel, index)}
 												title="Delete item"
 											>
 												(x)
 											</button>
 										</div>
-								</div>
-							{/each}
-						</div>
-					{/if}
+									</div>
+								{/each}
+							</div>
+						{/if}
 
-					<div class="receipt-divider">**********************************</div>
-					<div class="receipt-footer">
+						<div class="receipt-divider">**********************************</div>
+						<div class="receipt-footer">
 							<button
 								class="action-button"
 								onclick={() => {
+									currentList = group as FoodGroupLabel;
 									isAddingItem = true;
 									editingItemIndex = null;
 									newItemText = '';
@@ -451,19 +370,97 @@
 							>
 								ADD ITEM
 							</button>
-						<button
-							class="action-button reset-button"
-							onclick={(e) => {
-								e.stopPropagation();
-								toggleResetModal();
-							}}
-							title="Reset all lists"
-						>
-							RESET ALL
-						</button>
+							<button
+								class="action-button reset-button"
+								onclick={(e) => {
+									e.stopPropagation();
+									toggleResetModal();
+								}}
+								title="Reset all lists"
+							>
+								RESET ALL
+							</button>
+						</div>
+					</Receipt>
+				{/each}
+			</div>
+		{:else}
+			<!-- Mobile: single receipt with underlined navigation -->
+			<Receipt single>
+				<div class="receipt-header">
+					<h2>WHOLEMEAL</h2>
+					<div class="mobile-nav">
+						{#each ['protein', 'carb', 'veggie'] as listType}
+							<button
+								class="nav-button"
+								class:active={currentList === listType}
+								onclick={() => switchList(listType as FoodGroupLabel)}
+							>
+								<span class="emoji-large"></span> <span class="highlighted-list {currentList === listType ? (listType === 'protein' ? 'protein-highlight' : listType === 'carb' ? 'carb-highlight' : 'veggie-highlight') : ''}">{listType === 'protein' ? 'PROTEIN' : listType === 'carb' ? 'CARBS' : 'VEGGIES'}</span>
+							</button>
+						{/each}
 					</div>
 				</div>
-			</div>
+				<div class="receipt-divider">**********************************</div>
+
+				{#if foodItems[currentList].length === 0}
+					<div class="empty-state" in:fade>
+						<p>NO ITEMS</p>
+					</div>
+				{:else}
+					<div class="receipt-items">
+						{#each foodItems[currentList] as item, index}
+							<div class="item-line" in:fade={{ duration: 300 }}>
+								<div class="item-emoji">
+									<ReceiptEmoji emoji={item.emoji} size={20} />
+								</div>
+								<span class="item-text">{item.text}</span>
+								<div class="item-actions">
+									<button
+										class="edit-button"
+										onclick={() => editItem(currentList, index)}
+										title="Edit item"
+									>
+										(e)
+									</button>
+									<button
+										class="delete-button"
+										onclick={() => deleteItem(currentList, index)}
+										title="Delete item"
+									>
+										(x)
+									</button>
+								</div>
+							</div>
+						{/each}
+					</div>
+				{/if}
+
+				<div class="receipt-divider">**********************************</div>
+				<div class="receipt-footer">
+					<button
+						class="action-button"
+						onclick={() => {
+							isAddingItem = true;
+							editingItemIndex = null;
+							newItemText = '';
+							newItemEmoji = '';
+						}}
+					>
+						ADD ITEM
+					</button>
+					<button
+						class="action-button reset-button"
+						onclick={(e) => {
+							e.stopPropagation();
+							toggleResetModal();
+						}}
+						title="Reset all lists"
+					>
+						RESET ALL
+					</button>
+				</div>
+			</Receipt>
 		{/if}
 	</div>
 
@@ -636,33 +633,6 @@
 		grid-template-columns: repeat(3, 1fr);
 		gap: 2rem;
 		/* align-items: start; */
-	}
-
-	.receipt-container {
-		background: #fdfdfd;
-		padding: 1.5rem;
-		box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
-		position: relative;
-	}
-
-	.receipt-container::after {
-		content: '';
-		position: absolute;
-		bottom: -15px;
-		left: 0;
-		right: 0;
-		height: 30px;
-		background:
-			linear-gradient(135deg, transparent 75%, #e0e0e0 75%) 0 50%,
-			linear-gradient(45deg, transparent 75%, #e0e0e0 75%) 0 50%;
-		background-size: 30px 30px;
-		background-repeat: repeat-x;
-	}
-
-	/* Mobile: single receipt */
-	.receipt-container.mobile {
-		max-width: 380px;
-		margin: 0 auto;
 	}
 
 	.receipt-header {
