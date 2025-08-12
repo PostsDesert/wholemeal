@@ -399,7 +399,6 @@
 
 	function addCombo(event: MouseEvent | null) {
 		if (!shouldHandleInteraction() || !hasStarted) return;
-		console.log('First rotation complete:', firstRotationComplete);
 
 		// Start cart animation
 		isAddingToCart = true;
