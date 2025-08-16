@@ -388,7 +388,7 @@
 		}
 
 		.receipt-header p {
-			font-size: 0.9rem; /* Desktop: 18px */
+			font-size: 1.1rem; /* Desktop: 18px */
 		}
 
 		.receipt-divider {

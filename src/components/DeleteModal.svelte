@@ -113,7 +113,7 @@
 		right: 1rem;
 		background: none;
 		border: none;
-		font-size: 1.2rem;
+		font-size: 1.5rem;
 		cursor: pointer;
 		padding: 0.5rem;
 		font-family: inherit;
@@ -142,7 +142,7 @@
 		color: #d32f2f;
 		margin-bottom: 1rem;
 		margin-top: 0;
-		font-size: 1.2rem;
+		font-size: 1.5rem;
 		text-transform: uppercase;
 		text-align: center;
 		font-weight: bold;
@@ -154,7 +154,7 @@
 		color: #666;
 		line-height: 1.5;
 		text-transform: none;
-		font-size: 1rem;
+		font-size: 1.2rem;
 	}
 
 	.delete-modal strong {
@@ -177,7 +177,7 @@
 		border: 2px solid #333;
 		border-radius: 0;
 		cursor: pointer;
-		font-size: 0.9rem;
+		font-size: 1rem;
 		font-family: inherit;
 		font-weight: bold;
 		text-transform: uppercase;

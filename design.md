@@ -32,6 +32,7 @@ Overall:
   - Content of the receipt is not defined in the component, but rather passed in as a prop.
   - Font should be bigger on mobile devices
 - Add socials on bottom of receipts
+- minimize CSS usage by removing CSS that's shadowed and shared
 
 Combo Page
 - The combo page should show the auth button in the top right
@@ -87,7 +88,6 @@ General:
 - Slim down binary size.
 - Back button on lists page should be the same as the combo page.
 - refactor stuff out into components
-- minimize CSS usage by removing CSS that's shadowed and shared
 - Update ReadMe with features, and usage instructions.
 
 

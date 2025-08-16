@@ -49,9 +49,15 @@
 		text-align: center;
 		padding: 2rem 0;
 		color: #666;
-		font-size: 0.9rem;
+		font-size: 1.3rem;
 		text-transform: uppercase;
 	}
+
+	@media (min-width: 600px) {
+        :global(.empty-state) {
+            font-size: 1rem;
+        }
+    }
 
 	:global(.receipt-items) {
 		margin-bottom: 1rem;
@@ -94,7 +100,7 @@
 		color: #999;
 		cursor: pointer;
 		padding: 0 0.25rem;
-		font-size: 0.9rem;
+		font-size: 1.2rem;
 		transition: color 0.2s ease;
 	}
 

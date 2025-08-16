@@ -756,7 +756,7 @@
 
 	.modal h3 {
 		margin: 0 0 1rem 0;
-		font-size: 1.2rem;
+		font-size: 1.5rem;
 		text-transform: uppercase;
 		text-align: center;
 		font-weight: bold;
@@ -769,7 +769,7 @@
 		right: 1rem;
 		background: none;
 		border: none;
-		font-size: 1.2rem;
+		font-size: 1.5rem;
 		cursor: pointer;
 		padding: 0.5rem;
 		font-family: inherit;
@@ -791,7 +791,7 @@
 		font-weight: bold;
 		color: #333;
 		text-transform: uppercase;
-		font-size: 0.9rem;
+		font-size: 1.2rem;
 		letter-spacing: 0.05em;
 	}
 
@@ -800,7 +800,7 @@
 		padding: 0.75rem;
 		border: 2px solid #333;
 		border-radius: 0;
-		font-size: 1rem;
+		font-size: 1.1rem;
 		box-sizing: border-box;
 		font-family: inherit;
 		background-color: #fdfdfd;
@@ -816,7 +816,7 @@
 	.helper-text {
 		display: block;
 		margin-top: 0.5rem;
-		font-size: 0.8rem;
+		font-size: 1rem;
 		color: #666;
 		text-transform: none;
 	}
@@ -997,8 +997,13 @@
 			font-size: 1rem;
 		}
 
+		.edit-button,
+		.delete-button {
+		    font-size: 1rem;
+		}
+
 		.item-line {
-			font-size: 1rem;
+			font-size: 1.1rem;
 		}
 
 		.action-button {
