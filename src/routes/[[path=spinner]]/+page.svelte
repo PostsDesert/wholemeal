@@ -115,6 +115,7 @@
 
 	// Cart animation state
 	let isAddingToCart = $state(false);
+	let showDuplicateMessage = $state(false);
 
 	function createFoodGroup(label: FoodGroupLabel, emoji: string, items: FoodItem[]): FoodGroup {
 		return {
@@ -234,9 +235,6 @@
 		if (e.key === ' ' || e.code === 'Space') {
 			toggleRotation();
 		}
-		if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === 's' || e.key === 'j') {
-			comboMessageDismissed = true;
-		}
 		// Only handle number key releases in keyup
 		if (e.key === '1') stopIndividualRotation(items.protein);
 		if (e.key === '2') stopIndividualRotation(items.carb);
@@ -354,6 +352,7 @@
 		if (!allRotating) {
 			hasStarted = true; // Mark that the game has started
 			spinJustStarted = true;
+			showDuplicateMessage = false; // Reset duplicate message when spinning starts
 			shuffleArray(items.protein.items);
 			shuffleArray(items.carb.items);
 			shuffleArray(items.veggie.items);
@@ -401,19 +400,6 @@
 	function addCombo(event: MouseEvent | null) {
 		if (!shouldHandleInteraction() || !hasStarted) return;
 
-		// Start cart animation
-		isAddingToCart = true;
-
-		// Reset animation after 1 second
-		setTimeout(() => {
-			isAddingToCart = false;
-		}, 1000);
-		// Only dissmiss the message here if it was a click
-		// Otherwise, we'll dismiss on keyboard up.
-		if (event && event.detail >= 1) {
-			comboMessageDismissed = true;
-		}
-
 		if (event) {
 			event.stopPropagation();
 			preventClick = true;
@@ -452,6 +438,17 @@
 
 			// Only add if not a duplicate
 			if (!isDuplicate) {
+				// Start cart animation
+				isAddingToCart = true;
+
+				// Reset animation after 1 second
+				setTimeout(() => {
+					isAddingToCart = false;
+					comboMessageDismissed = false;
+				}, 1000);
+
+				comboMessageDismissed = true;
+
 				// Add new combo
 				data.combos.push(newCombo);
 
@@ -466,9 +463,16 @@
 				// Update the combo count for the navigation hint
 				comboCount = data.combos.length;
 			} else {
+				// Show duplicate message instead of animation
+				showDuplicateMessage = true;
+
+				// Hide duplicate message after 5 seconds
+				setTimeout(() => {
+					showDuplicateMessage = false;
+				}, 5000);
+
 				// Still update the combo count in case it wasn't set yet
 				comboCount = data.combos.length;
-
 			}
 		} catch (e) {
 			console.error('Error saving combo:', e);
@@ -544,16 +548,24 @@
 					bind:this={comboButton}
 					type="button"
 					class="create-combo-message"
-					onclick={addCombo}
+					onclick={(event) => addCombo(event)}
 					tabindex="0"
 					aria-label="Create combo"
 				>
-					{#if isDesktop}
-						Press enter to create combo
-					{:else if addedCombo}
-						Swipe ← → to navigate
+					{#if showDuplicateMessage}
+						🍽️ Combo already added!
+					{:else if isDesktop}
+					    {#if addedCombo}
+							Use ↔️ arrow keys to navigate
+						{:else}
+						    Enter ↩️ to create combo
+                        {/if}
 					{:else}
-						Swipe ↕️ to create combo
+                   	    {#if addedCombo}
+                 			Swipe ↔️ to navigate
+                  		{:else}
+                  		    Swipe ↕️ to create combo
+                        {/if}
 					{/if}
 				</button>
 			</div>
@@ -586,13 +598,6 @@
 							<span class="combo-badge">{comboCount}</span>
 						{/if}
 					</button>
-				{/if}
-
-				<!-- Navigation instruction hint (desktop only) -->
-				{#if hasAddedCombos && isDesktop}
-					<div class="navigation-instruction" in:fade={{ duration: 300, delay: 500 }}>
-						<span class="instruction-text">Use ← → arrow keys to navigate</span>
-					</div>
 				{/if}
 			</div>
 		{/if}
@@ -676,35 +681,6 @@
 		font-weight: bold;
 	}
 
-	/* Navigation instruction */
-	.navigation-instruction {
-		position: absolute;
-		bottom: -2.5rem;
-		left: 50%;
-		transform: translateX(-50%);
-		pointer-events: none;
-	}
-
-	.instruction-text {
-		font-size: 0.8rem;
-		color: rgba(0, 0, 0, 0.5);
-		background-color: rgba(255, 255, 255, 0.8);
-		padding: 0.3rem 0.8rem;
-		border-radius: 1rem;
-		white-space: nowrap;
-	}
-
-	@media (max-width: 768px) {
-		.navigation-instruction {
-			bottom: -2rem;
-		}
-
-		.instruction-text {
-			font-size: 0.75rem;
-			padding: 0.25rem 0.6rem;
-		}
-	}
-
 	/* Center message container */
 	.create-combo-container {
 		position: fixed;
@@ -756,7 +732,7 @@
 	/* Desktop position for create-combo-message */
 	@media (min-width: 769px) {
 		.create-combo-container {
-			bottom: calc(6.5rem + env(safe-area-inset-bottom));
+			bottom: calc(3rem + env(safe-area-inset-bottom));
 		}
 		main .food-group-container {
 			top: 5rem;
