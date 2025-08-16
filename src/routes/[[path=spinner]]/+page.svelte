@@ -523,6 +523,18 @@
 				<span class="cart-emoji">🛒</span>
 			</div>
 		{/if}
+		<!-- Start hint before first run -->
+		{#if !hasStarted}
+			<div class="create-combo-container">
+				<div class="create-combo-message">
+					{#if isDesktop}
+				        🎲 Click to Spin!
+					{:else}
+					    🎲 Tap to Spin!
+					{/if}
+				</div>
+			</div>
+		{/if}
 		<!-- Navigation hints -->
 		{#if !allRotating && hasStarted && !comboMessageDismissed}
 			<div class="create-combo-container">
