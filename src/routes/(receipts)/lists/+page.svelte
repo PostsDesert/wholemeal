@@ -1,15 +1,15 @@
 <script lang="ts">
-	import Receipt from '../../components/Receipt.svelte';
+	import Receipt from '$component/Receipt.svelte';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { fade, slide } from 'svelte/transition';
 	import { FOOD_ITEMS } from '$lib/food-data';
 	import { browser } from '$app/environment';
 	import type { FoodGroupLabel, FoodItem } from '$lib/types';
-	import DeleteModal from '../../components/DeleteModal.svelte';
-	import BackButton from '../../components/BackButton.svelte';
+	import DeleteModal from '$component/DeleteModal.svelte';
+	import BackButton from '$component/BackButton.svelte';
 	import { SwipeNavigationHandler } from '$lib/swipe-navigation';
-	import ReceiptEmoji from '../../components/ReceiptEmoji.svelte';
+	import ReceiptEmoji from '$component/ReceiptEmoji.svelte';
 
 	let showResetModal = $state(false);
 	let showDeleteModal = $state(false);
@@ -304,7 +304,7 @@
 	<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#f5f5f5" />
 </svelte:head>
 
-<main>
+<main class="receipt-page">
 	<div class="page-header">
 		<BackButton href="/" text="← Back to Spinner" />
 	</div>
@@ -596,29 +596,10 @@
 </main>
 
 <style>
-	/* --- FONT SETUP --- */
-	@font-face {
-		font-family: 'Merchant Copy';
-		src: url('/fonts/Merchant-Copy.ttf') format('TrueType');
-	}
 
-	main {
-		min-height: 100vh;
-		padding: 1rem;
-		font-family: 'Merchant Copy', 'Courier New', Courier, monospace;
-		background-color: #f5f5f5;
-		color: #333;
-	}
-
-	.page-header {
-		max-width: 1200px;
-		margin: 0 auto 1rem auto;
-		text-align: left;
-	}
-
-	@media (max-width: 600px) {
+	@media (min-width: 1260px) {
 		.page-header {
-			max-width: 380px;
+			max-width: 1200px;
 		}
 	}
 
@@ -633,20 +614,6 @@
 		grid-template-columns: repeat(3, 1fr);
 		gap: 2rem;
 		/* align-items: start; */
-	}
-
-	.receipt-header {
-		text-align: center;
-		margin-bottom: 1rem;
-	}
-
-	.receipt-header h2 {
-		font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-		font-weight: bold;
-		text-transform: uppercase;
-		font-size: 1.5rem;
-		margin: 0;
-		letter-spacing: 0.05em;
 	}
 
 	.receipt-subtitle {
@@ -678,15 +645,6 @@
 	.veggie-highlight {
 		background: linear-gradient(120deg, rgba(34, 139, 34, 0.4) 0%, rgba(50, 205, 50, 0.6) 100%);
 		box-shadow: inset 0 -0.2em 0 rgba(34, 139, 34, 0.3);
-	}
-
-	.receipt-divider {
-		font-size: 1rem;
-		text-align: center;
-		overflow: hidden;
-		white-space: nowrap;
-		margin: 1rem 0;
-		color: #555;
 	}
 
 	/* Mobile navigation with underlined text */
@@ -730,91 +688,9 @@
 		color: #333;
 	}
 
-	.empty-state {
-		text-align: center;
-		padding: 2rem 0;
-		color: #666;
-		font-size: 0.9rem;
-		text-transform: uppercase;
-	}
-
-	.receipt-items {
-		margin-bottom: 1rem;
-	}
-
-	.item-line {
-		display: flex;
-		justify-content: flex-start;
-		align-items: center;
-		margin-bottom: 0.5rem;
-		line-height: 1.2;
-		font-size: 1rem;
-		position: relative;
-	}
-
-	.item-text {
-		text-transform: uppercase;
-		order: 1;
-		flex: 1;
-	}
-
-	.item-emoji {
-		padding-right: 0.5rem;
-		order: 0;
-		line-height: 1;
-	}
-
-	.item-actions {
-		display: flex;
-		gap: 0.25rem;
-		order: 2;
-		margin-left: auto;
-	}
-
-	.edit-button,
-	.delete-button {
-		background: none;
-		border: none;
-		font-family: inherit;
-		color: #999;
-		cursor: pointer;
-		padding: 0 0.25rem;
-		font-size: 0.9rem;
-		transition: color 0.2s ease;
-	}
-
-	.edit-button:hover {
-		color: #2196f3;
-	}
-
-	.delete-button:hover {
-		color: #d32f2f;
-	}
-
-	.receipt-footer {
-		text-align: center;
-		margin-top: 1rem;
-	}
-
 	.action-button {
-		font-family: inherit;
-		background-color: transparent;
-		border: 2px solid #333;
-		padding: 0.75rem 1rem;
-		cursor: pointer;
-		font-weight: bold;
-		text-transform: uppercase;
-		transition: all 0.2s ease;
-		font-size: 0.8rem;
-		letter-spacing: 0.05em;
-		margin: 0.25rem;
 		display: block;
 		width: calc(100% - 0.5rem);
-	}
-
-	.action-button:hover {
-		background-color: #333;
-		color: #fdfdfd;
 	}
 
 	.reset-button {

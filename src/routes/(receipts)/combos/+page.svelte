@@ -3,12 +3,12 @@
 	import { goto } from '$app/navigation';
 	import { fade, fly } from 'svelte/transition';
 	import type { FoodItem } from '$lib/types';
-	import DeleteModal from '../../components/DeleteModal.svelte';
+	import DeleteModal from '$component/DeleteModal.svelte';
 	import { SwipeNavigationHandler } from '$lib/swipe-navigation';
 
-	import ReceiptEmoji from '../../components/ReceiptEmoji.svelte';
-	import BackButton from '../../components/BackButton.svelte';
-	import Receipt from '../../components/Receipt.svelte';
+	import ReceiptEmoji from '$component/ReceiptEmoji.svelte';
+	import BackButton from '$component/BackButton.svelte';
+	import Receipt from '$component/Receipt.svelte';
 
 	// Combo interface for saved meal combinations
 	interface Combo {
@@ -211,7 +211,7 @@
 	<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#f5f5f5" />
 </svelte:head>
 
-<main>
+<main class="receipt-page">
 	<div class="page-header">
 		<BackButton href="/spinner" text="← Back to Spinner" />
 	</div>
