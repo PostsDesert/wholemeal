@@ -107,6 +107,7 @@
 
 	// Animation states
 	let hasAddedCombos = $state(false);
+	let addedCombo = $state(false); // Resets on page navigation
 
 	let comboCount = $state(0);
 	let comboMessageDismissed = $state(false);
@@ -460,6 +461,7 @@
 				// Set flag that combos exist
 				localStorage.setItem('comboAdded', 'true');
 				hasAddedCombos = true;
+				addedCombo = true;
 
 				// Update the combo count for the navigation hint
 				comboCount = data.combos.length;
@@ -548,6 +550,8 @@
 				>
 					{#if isDesktop}
 						Press enter to create combo
+					{:else if addedCombo}
+						Swipe ← → to navigate
 					{:else}
 						Swipe ↕️ to create combo
 					{/if}
@@ -582,6 +586,13 @@
 							<span class="combo-badge">{comboCount}</span>
 						{/if}
 					</button>
+				{/if}
+
+				<!-- Navigation instruction hint (desktop only) -->
+				{#if hasAddedCombos && isDesktop}
+					<div class="navigation-instruction" in:fade={{ duration: 300, delay: 500 }}>
+						<span class="instruction-text">Use ← → arrow keys to navigate</span>
+					</div>
 				{/if}
 			</div>
 		{/if}
@@ -663,6 +674,35 @@
 
 	.hint-text {
 		font-weight: bold;
+	}
+
+	/* Navigation instruction */
+	.navigation-instruction {
+		position: absolute;
+		bottom: -2.5rem;
+		left: 50%;
+		transform: translateX(-50%);
+		pointer-events: none;
+	}
+
+	.instruction-text {
+		font-size: 0.8rem;
+		color: rgba(0, 0, 0, 0.5);
+		background-color: rgba(255, 255, 255, 0.8);
+		padding: 0.3rem 0.8rem;
+		border-radius: 1rem;
+		white-space: nowrap;
+	}
+
+	@media (max-width: 768px) {
+		.navigation-instruction {
+			bottom: -2rem;
+		}
+
+		.instruction-text {
+			font-size: 0.75rem;
+			padding: 0.25rem 0.6rem;
+		}
 	}
 
 	/* Center message container */

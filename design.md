@@ -33,6 +33,9 @@ Overall:
   - Font should be bigger on mobile devices
 - Add socials on bottom of receipts
 - minimize CSS usage by removing CSS that's shadowed and shared
+- Make it easier to tell that swipe navigation gestures are available on mobile devices.
+- Keyboard shortcuts should be explained on desktop devices.
+- Back button on lists page should be the same as the combo page.
 
 Combo Page
 - The combo page should show the auth button in the top right
@@ -81,13 +84,12 @@ Spinner View
 
 General:
 - Refactor out button component (option for color)
-- Make it easier to tell that swipe navigation gestures are available on mobile devices.
-- Keyboard shortcuts should be explained on desktop devices.
 - Caching emoji generation to speed up page loads/reduce redundent work.
 - Cache emoji label colors to speed up page loads/reduce redundant work.
 - Slim down binary size.
-- Back button on lists page should be the same as the combo page.
 - refactor stuff out into components
+- Add delete modal to combo screen to confirm deletion of combo.
+- extract edit modal to a component
 - Update ReadMe with features, and usage instructions.
 
 
