@@ -28,6 +28,10 @@ Overall:
 - Auth Screen should be disabled behind a feature flag (or disabled)
 - The user should be logged in and always able to edit lists.
 - "back to spinner" button should be a component and also the same for both pages
+- Refactor out receipt component
+  - Content of the receipt is not defined in the component, but rather passed in as a prop.
+  - Font should be bigger on mobile devices
+- Add socials on bottom of receipts
 
 Combo Page
 - The combo page should show the auth button in the top right
@@ -74,20 +78,10 @@ Spinner View
 
 ### Todo (before internal release)
 
-Spinner View:
-
-Lists View:
-
-Combo View:
-
 General:
-- Refactor out receipt component
-  - Content of the receipt is not defined in the component, but rather passed in as a prop.
-  - Font should be bigger on mobile devices
 - Refactor out button component (option for color)
 - Make it easier to tell that swipe navigation gestures are available on mobile devices.
 - Keyboard shortcuts should be explained on desktop devices.
-- Add socials on bottom of receipts (Github, LinkedIn, BlueSky?)
 - Caching emoji generation to speed up page loads/reduce redundent work.
 - Cache emoji label colors to speed up page loads/reduce redundant work.
 - Slim down binary size.

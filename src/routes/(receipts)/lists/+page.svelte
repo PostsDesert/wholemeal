@@ -10,6 +10,7 @@
 	import BackButton from '$component/BackButton.svelte';
 	import { SwipeNavigationHandler } from '$lib/swipe-navigation';
 	import ReceiptEmoji from '$component/ReceiptEmoji.svelte';
+	import ReceiptFooter from '$component/ReceiptFooter.svelte';
 
 	let showResetModal = $state(false);
 	let showDeleteModal = $state(false);
@@ -381,6 +382,11 @@
 								RESET ALL
 							</button>
 						</div>
+						{#if group === 'carb'}
+							<div style="margin-top: auto;">
+								<ReceiptFooter></ReceiptFooter>
+							</div>
+						{/if}
 					</Receipt>
 				{/each}
 			</div>
@@ -459,6 +465,7 @@
 					>
 						RESET ALL
 					</button>
+					<ReceiptFooter></ReceiptFooter>
 				</div>
 			</Receipt>
 		{/if}
@@ -853,7 +860,7 @@
 		border: 2px solid #333;
 		border-radius: 0;
 		cursor: pointer;
-		font-size: 0.9rem;
+		font-size: 1rem;
 		font-family: inherit;
 		font-weight: bold;
 		text-transform: uppercase;
@@ -890,7 +897,7 @@
 		border-radius: 0;
 		padding: 0.75rem 1.5rem;
 		cursor: pointer;
-		font-size: 0.9rem;
+		font-size: 1rem;
 		font-family: inherit;
 		font-weight: bold;
 		text-transform: uppercase;
@@ -912,7 +919,7 @@
 		color: #666;
 		line-height: 1.5;
 		text-transform: none;
-		font-size: 1rem;
+		font-size: 1.3rem;
 	}
 
 	.reset-modal h3 {

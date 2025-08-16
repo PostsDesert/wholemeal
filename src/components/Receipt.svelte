@@ -16,6 +16,15 @@
 		padding: 1.5rem;
 		box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
 		position: relative;
+		display: flex;
+		flex-direction: column;
+		min-height: 400px;
+	}
+
+	.receipt {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
 	}
 
 	.receipt-container::after {

@@ -120,7 +120,7 @@
 		font-weight: bold;
 		text-transform: uppercase;
 		transition: all 0.2s ease;
-		font-size: 0.8rem;
+		font-size: 1rem;
 		letter-spacing: 0.05em;
 		margin: 0.25rem;
 		position: relative;
@@ -129,5 +129,18 @@
 	:global(.action-button:hover) {
 		background-color: #333;
 		color: #fdfdfd;
+	}
+
+	:global(.receipt-note) {
+		font-size: 0.9rem;
+		color: #888;
+		margin: 0.5rem 0;
+		font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	}
+
+	@media (min-width: 600px) {
+		:global(.receipt-note) {
+			font-size: 0.9rem;
+		}
 	}
 </style>

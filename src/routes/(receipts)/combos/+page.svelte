@@ -9,6 +9,7 @@
 	import ReceiptEmoji from '$component/ReceiptEmoji.svelte';
 	import BackButton from '$component/BackButton.svelte';
 	import Receipt from '$component/Receipt.svelte';
+	import ReceiptFooter from '$component/ReceiptFooter.svelte';
 
 	// Combo interface for saved meal combinations
 	interface Combo {
@@ -294,7 +295,7 @@
 					</button>
 				{/if}
 			</div>
-			<p class="receipt-note">Thank you for using WHOLEMEAL!</p>
+			<ReceiptFooter></ReceiptFooter>
 		</div>
 	</Receipt>
 </main>
@@ -302,7 +303,7 @@
 <!-- Delete confirmation modal -->
 <DeleteModal
 	isOpen={showDeleteModal}
-	title="Clear All Combinations"
+	title="empty-stateClear All Combinations"
 	message="Are you sure you want to clear all saved meal combinations? This action cannot be undone."
 	confirmText="Clear All"
 	cancelText="Cancel"
@@ -311,65 +312,16 @@
 />
 
 <style>
-	/* --- FONT SETUP --- */
-	@font-face {
-		font-family: 'Merchant Copy';
-		src: url('/fonts/Merchant-Copy.ttf') format('TrueType');
-	}
-
-	main {
-		min-height: 100vh;
-		padding: 1rem;
-		font-family: 'Merchant Copy', 'Courier New', Courier, monospace;
-		background-color: #f5f5f5;
-		color: #333;
-	}
-
-	.page-header {
-		max-width: 380px;
-		margin: 0 auto 1rem auto;
-		text-align: left;
-	}
-
-	.receipt-header {
-		text-align: center;
-		margin-bottom: 1rem;
-	}
-
-	.receipt-header h2 {
-		font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-		font-weight: bold;
-		text-transform: uppercase;
-		font-size: 1.5rem;
-		margin: 0;
-		letter-spacing: 0.05em;
-	}
-
 	.receipt-header p {
 		margin: 0.25rem 0;
-		font-size: 1.1rem;
-		/* Mobile: 22px (larger than desktop 18px) */
+		font-size: 1.15rem;
 	}
 
 	.receipt-divider {
 		font-size: 1.25rem;
-		/* Mobile: 25px (larger than desktop 20px) */
-		text-align: center;
-		overflow: hidden;
-		white-space: nowrap;
-		margin: 1rem 0;
-		color: #555;
 	}
 	.receipt-divider.small {
 		margin: 0.75rem 0;
-	}
-
-	.empty-state {
-		text-align: center;
-		padding: 2rem 0;
-		color: #666;
-		font-size: 0.9rem;
-		text-transform: uppercase;
 	}
 
 	.combo-group {
@@ -380,77 +332,24 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		font-size: 1rem;
+		font-size: 1.15rem;
 		/* Mobile: 20px (larger than desktop 16px) */
 		color: #666;
 		margin-bottom: 0.75rem;
 	}
 
 	.delete-button {
-		background: none;
-		border: none;
-		font-family: inherit;
-		color: #999;
-		cursor: pointer;
-		padding: 0 0.25rem;
 		font-size: 1.25rem;
-		/* Mobile: 25px (larger than desktop 20px) */
-	}
-	.delete-button:hover {
-		color: #d32f2f;
 	}
 
 	.item-line {
-		display: flex;
-		justify-content: flex-start;
-		align-items: center;
-		margin-bottom: 0.5rem;
-		line-height: 1.2;
 		font-size: 1.25rem;
-		/* Mobile: 25px (larger than desktop 20px) */
-	}
-
-	.item-text {
-		text-transform: uppercase;
-		order: 1;
-	}
-
-	/* --- CHANGE: CSS filter is no longer needed. This class is now just a wrapper. --- */
-	.item-emoji {
-		padding-right: 0.5rem;
-		order: 0;
-		/* We can set a fixed size for the wrapper if needed, but flexbox handles alignment. */
-		line-height: 1; /* Helps with vertical alignment */
-	}
-
-	.receipt-footer {
-		text-align: center;
 	}
 
 	.action-buttons {
 		display: flex;
 		flex-direction: column;
-		gap: 0.75rem;
 		margin-bottom: 1.5rem;
-	}
-
-	.action-button {
-		font-family: inherit;
-		background-color: transparent;
-		border: 2px solid #333;
-		padding: 0.75rem 1rem;
-		cursor: pointer;
-		font-weight: bold;
-		text-transform: uppercase;
-		transition: all 0.2s ease;
-		position: relative;
-		font-size: 0.9rem;
-		letter-spacing: 0.05em;
-	}
-
-	.action-button:hover {
-		background-color: #333;
-		color: #fdfdfd;
 	}
 
 	.clear-button {
@@ -480,12 +379,6 @@
 		100% {
 			transform: scale(1) translateY(-50%);
 		}
-	}
-
-	.receipt-note {
-		font-size: 0.8rem;
-		color: #888;
-		margin: 0.5rem 0;
 	}
 
 	/* Desktop styles - apply original sizes for larger screens */
