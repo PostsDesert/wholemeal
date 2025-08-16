@@ -543,12 +543,12 @@
 		{/if}
 		<!-- Navigation hints -->
 		{#if !allRotating && hasStarted && !comboMessageDismissed}
-			<div class="create-combo-container">
+			<div class="create-combo-container" class:shake={showDuplicateMessage}>
 				<button
 					bind:this={comboButton}
 					type="button"
 					class="create-combo-message"
-					onclick={(event) => addCombo(event)}
+					onclick={!addedCombo ? ((event) => addCombo(event)): undefined}
 					tabindex="0"
 					aria-label="Create combo"
 				>
@@ -691,6 +691,16 @@
 		justify-content: center;
 		z-index: 10;
 		pointer-events: auto;
+	}
+
+	.create-combo-container.shake {
+		animation: shake 0.5s ease-in-out;
+	}
+
+	@keyframes shake {
+		0%, 100% { transform: translateX(0); }
+		10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+		20%, 40%, 60%, 80% { transform: translateX(8px); }
 	}
 
 	/* Create combo instruction message */
