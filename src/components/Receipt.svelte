@@ -19,6 +19,7 @@
 		display: flex;
 		flex-direction: column;
 		min-height: 400px;
+		max-width: 375px;
 	}
 
 	.receipt {

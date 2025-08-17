@@ -92,6 +92,7 @@ Spinner View:
    - Swipe up should explode the emojis in the direction of the swipe. They should hit off the edges of the screen and gravity fall down
 - Add light/dark mode
 - Upvote / downvote ingredients (apply weights to the sorting)
+- Rewrite list page css to better handle Flash of Unstyled Content
 
 
 Auth Screen (this will be after the pocketbase/elixir backend is introduced)
