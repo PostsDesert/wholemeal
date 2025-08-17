@@ -1,5 +1,16 @@
 
-export function getEmojiColor(emojiString: string) {
+import { PRECOMPUTED_EMOJI_COLORS } from './food-data-precomputed';
+
+export function getEmojiColor(
+	emojiString: string,
+	options: { dontPrecompute?: boolean } = {}
+) {
+	const { dontPrecompute = false } = options;
+
+	if (!dontPrecompute && PRECOMPUTED_EMOJI_COLORS[emojiString]) {
+	  console.log(`Using precomputed color for ${emojiString}`);
+		return PRECOMPUTED_EMOJI_COLORS[emojiString];
+	}
     const emojis = Array.from(emojiString);
     if (typeof document === 'undefined') {
         return '#000000';
