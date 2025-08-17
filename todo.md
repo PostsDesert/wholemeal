@@ -90,6 +90,8 @@ Spinner View:
 - Decrease the duration of the fade in animation
 - Gravity fall should have emojis fall according to gravity, so if the user tilts their phone, the emojis should fall in that direction.
    - Swipe up should explode the emojis in the direction of the swipe. They should hit off the edges of the screen and gravity fall down
+- Add light/dark mode
+- Upvote / downvote ingredients (apply weights to the sorting)
 
 
 Auth Screen (this will be after the pocketbase/elixir backend is introduced)
