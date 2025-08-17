@@ -8,7 +8,6 @@ export function getEmojiColor(
 	const { dontPrecompute = false } = options;
 
 	if (!dontPrecompute && PRECOMPUTED_EMOJI_COLORS[emojiString]) {
-	  console.log(`Using precomputed color for ${emojiString}`);
 		return PRECOMPUTED_EMOJI_COLORS[emojiString];
 	}
     const emojis = Array.from(emojiString);
