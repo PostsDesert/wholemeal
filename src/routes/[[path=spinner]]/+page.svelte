@@ -117,6 +117,9 @@
 	let isAddingToCart = $state(false);
 	let showDuplicateMessage = $state(false);
 
+	let carbElement: HTMLDivElement; // Reference to the carb food group wrapper
+	let cartPosition = $state({ top: '50%', left: '50%' }); // Position for the cart
+
 	function createFoodGroup(label: FoodGroupLabel, emoji: string, items: FoodItem[]): FoodGroup {
 		return {
 			label,
@@ -438,6 +441,17 @@
 
 			// Only add if not a duplicate
 			if (!isDuplicate) {
+
+   			    // Calculate the position for the cart overlay based on the carb element
+   			    if (carbElement) {
+    				const rect = carbElement.getBoundingClientRect();
+    				// The convene point is the center of the carb element.
+    				// We'll calculate the center and add a small offset to be "just under".
+    				const top = rect.top + rect.height / 2 + 15;
+    				const left = rect.left + rect.width / 2;
+    				cartPosition = { top: `${top}px`, left: `${left}px` };
+   			    }
+
 				// Start cart animation
 				isAddingToCart = true;
 
@@ -500,7 +514,7 @@
 				/>
 			</div>
 			<h2 class="plus-symbol" class:hidden-during-cart={isAddingToCart}>+</h2>
-			<div>
+			<div bind:this={carbElement}>
 				<FoodGroupComponent
 					foodItem={items.carb}
 					{hasStarted}
@@ -525,7 +539,7 @@
 
 		<!-- Cart animation overlay -->
 		{#if isAddingToCart}
-			<div class="cart-overlay">
+			<div class="cart-overlay" style="top: {cartPosition.top}; left: {cartPosition.left};">
 				<span class="cart-emoji">🛒</span>
 			</div>
 		{/if}
@@ -753,9 +767,7 @@
 
 	/* Cart animation styles */
 	.cart-overlay {
-		position: absolute;
-		top: 50%;
-		left: 50%;
+		position: fixed;
 		transform: translate(-50%, -50%);
 		z-index: 1000;
 		pointer-events: none;
@@ -773,11 +785,11 @@
 		}
 		33% {
 			opacity: 1;
-			transform: scale(1.2);
+			transform: scale(1);
 		}
 		100% {
 			opacity: 0;
-			transform: scale(1.2);
+			transform: scale(1);
 		}
 	}
 

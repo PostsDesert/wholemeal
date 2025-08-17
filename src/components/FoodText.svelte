@@ -105,7 +105,14 @@
 		opacity: 0;
 		/* Ensure background is transparent for emojis during normal state */
 		background-color: transparent;
+		--cart-scale: 0.5;
 	}
+
+    @media (min-width: 769px) {
+        .food-emoji {
+            --cart-scale: 0.45;
+        }
+    }
 
 	.food-emoji.falling_animation {
 		/* Override scale from parent's falling animation to keep emoji size consistent */
@@ -137,11 +144,11 @@
 			opacity: 1;
 		}
 		33% {
-			transform: translate(-50%, calc(-50% + var(--center-offset, 0px))) scale(0.6);
+			transform: translate(-50%, calc(-50% + var(--center-offset, 0px))) scale(var(--cart-scale));
 			opacity: 1;
 		}
 		100% {
-		    transform: translate(-50%, calc(-50% + var(--center-offset, 0px))) scale(0.6);
+		    transform: translate(-50%, calc(-50% + var(--center-offset, 0px))) scale(var(--cart-scale));
 			opacity: 0;
 			visibility: hidden;
 		}
@@ -153,11 +160,11 @@
 			opacity: 1;
 		}
 		33% {
-			transform: translate(-50%, -50%) scale(0.6);
+			transform: translate(-50%, -50%) scale(var(--cart-scale));
 			opacity: 1;
 		}
 		100% {
-		    transform: translate(-50%, -50%) scale(0.6);
+		    transform: translate(-50%, -50%) scale(var(--cart-scale));
 			opacity: 0;
 			visibility: hidden;
 		}
@@ -169,11 +176,11 @@
 			opacity: 1;
 		}
 		33% {
-			transform: translate(-50%, calc(-50% + var(--center-offset, 0px))) scale(0.6);
+			transform: translate(-50%, calc(-50% + var(--center-offset, 0px))) scale(var(--cart-scale));
 			opacity: 1;
 		}
 		100% {
-			transform: translate(-50%, calc(-50% + var(--center-offset, 0px))) scale(0.6);
+			transform: translate(-50%, calc(-50% + var(--center-offset, 0px))) scale(var(--cart-scale));
 			opacity: 0;
 			visibility: hidden;
 		}
