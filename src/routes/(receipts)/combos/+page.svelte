@@ -26,6 +26,7 @@
 
 	// Delete modal
 	let showDeleteModal = $state(false);
+	let comboToDelete: Combo | null = $state(null);
 
 	// Swipe navigation handler
 	let swipeHandler: SwipeNavigationHandler;
@@ -120,23 +121,42 @@
 		}
 	}
 
+	// Show delete confirmation modal for a single combo
+	function showDeleteComboConfirmation(combo: Combo) {
+		comboToDelete = combo;
+		showDeleteModal = true;
+	}
+
+	// Handle delete modal confirm
+	function handleDeleteConfirm() {
+		if (comboToDelete) {
+			deleteCombo(comboToDelete.id);
+			comboToDelete = null;
+		} else {
+			// This handles the "Clear All" case
+			clearAllCombos();
+		}
+		showDeleteModal = false;
+	}
+
 	// Clear all combos
 	function clearAllCombos() {
 		// Clear the local combos array
 		combos = [];
 		// Remove combos from localStorage
 		saveCombos();
-		showDeleteModal = false;
 	}
 
 	// Show delete confirmation modal
-	function showClearConfirmation() {
+	function showClearAllConfirmation() {
+		comboToDelete = null; // Ensure we're in "clear all" mode
 		showDeleteModal = true;
 	}
 
 	// Handle delete modal cancel
 	function handleDeleteCancel() {
 		showDeleteModal = false;
+		comboToDelete = null;
 	}
 
 	// Send combos via email
@@ -239,7 +259,7 @@
 							<span class="item-date">Meal from: {formatDate(combo.date)}</span>
 							<button
 								class="delete-button"
-								onclick={() => deleteCombo(combo.id)}
+								onclick={() => showDeleteComboConfirmation(combo)}
 								aria-label="Delete combo"
 							>
 								(x)
@@ -290,7 +310,7 @@
 					{/if}
 				</button>
 				{#if combos.length > 0}
-					<button class="action-button clear-button" onclick={showClearConfirmation}>
+					<button class="action-button clear-button" onclick={showClearAllConfirmation}>
 						CLEAR ALL MEALS
 					</button>
 				{/if}
@@ -303,11 +323,20 @@
 <!-- Delete confirmation modal -->
 <DeleteModal
 	isOpen={showDeleteModal}
-	title="empty-stateClear All Combinations"
-	message="Are you sure you want to clear all saved meal combinations? This action cannot be undone."
-	confirmText="Clear All"
+	title={comboToDelete ? 'Delete Combination' : 'Clear All Combinations'}
+	message={
+		comboToDelete
+			? 'Are you sure you want to delete this meal combination?'
+			: 'Are you sure you want to clear all saved meal combinations? This action cannot be undone.'
+	}
+	itemName={
+		comboToDelete
+			? `${comboToDelete.protein.emoji} ${comboToDelete.protein.text}, ${comboToDelete.carb.emoji} ${comboToDelete.carb.text}, ${comboToDelete.veggie.emoji} ${comboToDelete.veggie.text}`
+			: null
+	}
+	confirmText={comboToDelete ? 'Delete' : 'Clear All'}
 	cancelText="Cancel"
-	on:confirm={clearAllCombos}
+	on:confirm={handleDeleteConfirm}
 	on:cancel={handleDeleteCancel}
 />
 

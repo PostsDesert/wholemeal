@@ -42,6 +42,9 @@
 			<p>
 				{message}
 				{#if itemName}
+					{#if itemName.match(/,.*,/)}
+						<br>
+					{/if}
 					<strong>{itemName}</strong>?
 				{/if}
 			</p>
