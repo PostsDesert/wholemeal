@@ -1,4 +1,11 @@
-<script>
+<script lang="ts">
+	import { precomputeEmojiColors } from '$lib/precompute';
+	import { onMount } from 'svelte';
+
+	onMount(() => {
+		precomputeEmojiColors();
+	});
+
 	let { children, data } = $props();
 </script>
 
