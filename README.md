@@ -1,38 +1,41 @@
-# sv
+# Wholemeal
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Wholemeal is a fun and simple app to help you discover unique meal combinations, making it easier to decide what to eat and ensure you’re getting your daily veggies.
 
-## Creating a project
+## Why Wholemeal?
 
-If you're seeing this, you've probably already done this step. Congrats!
+I built Wholemeal because I was having trouble coming up with things to eat. This project makes meal planning more enjoyable and helps you generate new ideas for balanced meals.
+
+## Features
+
+- **Food Slot Spinner:** Randomly generates meal combos consisting of a protein, carb, and veggie.
+- **Saved Combos Receipt:** View all your saved meal combinations in a receipt-style list.
+- **Custom Food Items:** Add your own proteins, carbs, and veggies to personalize your options.
+- **Easy Navigation:** Use swipe gestures (on mobile) and keyboard shortcuts (on desktop) for quick navigation and actions.
+- **Copy & Share:** Easily copy your meal combos or send them via email.
+
+## Demo
+
+Try it out at [wholemeal.griffithbaker.com](https://wholemeal.griffithbaker.com)
+
+## How It Works
+
+1. Spin the food slot spinner to get a random meal combo.
+2. Save combos you like to your personal receipt.
+3. Add your own food items to expand your choices.
+4. Use gestures and shortcuts to navigate and manage your combos.
+
+## Development
+
+Clone the repo and install dependencies:
 
 ```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
+git clone https://github.com/griffithbaker/wholemeal.git
+cd wholemeal
+npm install
 npm run build
 ```
 
-You can preview the production build with `npm run preview`.
+## Contributions
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+Contributions are welcome!

@@ -36,6 +36,9 @@ Overall:
 - Make it easier to tell that swipe navigation gestures are available on mobile devices.
 - Keyboard shortcuts should be explained on desktop devices.
 - Back button on lists page should be the same as the combo page.
+- Cache emoji label colors to speed up page loads/reduce redundant work.
+- Caching emoji generation to speed up page loads/reduce redundent work.
+- Update ReadMe with features, and usage instructions.
 
 Combo Page
 - The combo page should show the auth button in the top right
@@ -43,6 +46,7 @@ Combo Page
 - Change the url from '/combo' to '/combos'
 - Don't have the background fade in. It should just immediately appear.
 - The green checkbox after copying to clipboard is not applied with receipt filter.
+- Add delete modal to combo screen to confirm deletion of combo.
 
 List View
 - When clicking the auth button it should open the same window as the spinner view. Right now, when the user is authenticated they still have to click the auth button. The auth button should just pull up the same screen as the other views and not change the edit state.
@@ -79,20 +83,6 @@ Spinner View
 - Add simple animation when adding to cart
     - I'm thinking that the text disappears, the emojis all move the center and a cart emoji fades in over the top as the emojis shrink. Then the cart fades out. This should be ~1 second.
 - Shopping cart emoji shouldn't play on start screen (via keyboard/swipe action)
-
-### Todo (before internal release)
-
-General:
-- Refactor out button component (option for color)
-- Caching emoji generation to speed up page loads/reduce redundent work.
-- Cache emoji label colors to speed up page loads/reduce redundant work.
-- Slim down binary size.
-- refactor stuff out into components
-- Add delete modal to combo screen to confirm deletion of combo.
-- extract edit modal to a component
-- Update ReadMe with features, and usage instructions.
-
-
 
 ### Future Improvements
 Spinner View:
